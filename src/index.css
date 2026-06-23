@@ -38,9 +38,13 @@ html {
 @utility font-Memories {
   @apply font-memories;
 }
-/* @utility font-modak {
-  @apply font-modak;
-} */
+ 
 @utility flex-center {
   @apply flex justify-center items-center;
+}
+@utility menu-btn{
+ @apply bg-transparent text-black px-3 text-sm sm:text-lg md:px-6 py-1.5 sm:py-2 rounded-3xl cursor-pointer border-2 border-[#ceb79c] hover:border-[#000000] transition-all ease-in duration-150 hover:transform hover:scale-[1.09]
+}
+@utility burger-btn{
+ @apply bg-red-500 text-white px-3 text-sm sm:text-lg md:px-5 sm:py-2.5 py-1.5 rounded-3xl cursor-pointer    hover:bg-black transition-all ease-in duration-150 hover:transform hover:scale-[1.09] 
 }
