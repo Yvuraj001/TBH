@@ -1,11 +1,12 @@
-import Hero from "./conponents/Hero";
-import Navbar from "./conponents/Navbar";
+import Hero from "./components/Hero";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
-    <main className="w-screen  bg-[#ffe6cd] overflow-x-hidden">
+    <main className="w-screen h-screen bg-[#ffe6cd] overflow-x-hidden">
       <Navbar />
       <Hero />
+    
     </main>
   );
 };
