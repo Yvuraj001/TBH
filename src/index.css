@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+body,
+html {
+  background-color: rgba(255, 219, 181, 0.682);
+  color: black;
+   
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: "Modern Negra";
+  src: url("/fonts/Modern Negra Demo.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Memories";
+  src: url("/fonts/MouseMemoirs-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Modak";
+  src: url("/fonts/Modak-Regular.ttf") format("truetype");
+}
+
+@theme {
+  --color-yellow: #e7d393;
+  --color-white-100: #efefef;
+  --font-sans: "Mona Sans", sans-serif;
+  --font-modern-negra: "Modern Negra", sans-serif;
+  --font-memories: "Memories", sans-serif;
+  --font-modak: "Modak", sans-serif;
+
+  --font-serif: "DM Serif Text", serif;
+}
+
+@utility font-Modern-Negra {
+  @apply font-modern-negra;
+}
+@utility font-Memories {
+  @apply font-memories;
+}
+/* @utility font-modak {
+  @apply font-modak;
+} */
+@utility flex-center {
+  @apply flex justify-center items-center;
+}
