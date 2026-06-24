@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
-import ScrollTrigger from "gsap/src/ScrollTrigger";
+import {ScrollTrigger} from "gsap/all";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -64,7 +64,7 @@ const Hero = () => {
     gsap.fromTo(
       leftParaSplit.lines,
       {
-        opacity: 0.3,
+        opacity: 0.1,
       },
       {
         opacity: 1,
@@ -87,17 +87,6 @@ const Hero = () => {
         ease: "power1.in",
       },
     );
-    // gsap
-    //   .timeline({
-    //     scrollTrigger: {
-    //       trigger: "#hero",
-    //       scrub: true,
-    //       start: "center top",
-    //       end: "bottom top",
-    //     },
-    //   })
-    //   .to(".tomato", { y: 1200 }, 0)
-    //   .to(".lettuce", { y: 1300 }, 0);
   }, []);
   return (
     <section id="hero" className="hero-height ">
