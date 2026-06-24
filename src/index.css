@@ -2,10 +2,18 @@
 
 body,
 html {
-  background-color: rgba(255, 219, 181, 0.682);
+  background-color: #ffbb7887;
   color: black;
    
   scroll-behavior: smooth;
+}
+
+.hero-height{
+  /* min-height: calc(100vh - 64px) ; */
+}
+
+.redText {
+  color: oklch(76.9% 0.188 70.08)
 }
 
 @font-face {
@@ -33,7 +41,7 @@ html {
 }
 
 @utility font-Modern-Negra {
-  @apply font-modern-negra;
+  @apply font-modern-negra;  
 }
 @utility font-Memories {
   @apply font-memories;
@@ -47,4 +55,7 @@ html {
 }
 @utility burger-btn{
  @apply bg-red-500 text-white px-3 text-sm sm:text-lg md:px-5 sm:py-2.5 py-1.5 rounded-3xl cursor-pointer    hover:bg-black transition-all ease-in duration-150 hover:transform hover:scale-[1.09] 
-}
+} 
+
+ 
+
