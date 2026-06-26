@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
-import {ScrollTrigger} from "gsap/all";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -22,7 +22,7 @@ const Hero = () => {
       y: 30,
       rotation: -10,
       duration: 1.4,
-      repeat: 3,
+      repeat: 4,
       repeatDelay: 2,
       yoyo: true,
       ease: "bounce",
@@ -40,6 +40,7 @@ const Hero = () => {
       delay: 1.5,
     });
     // burgerimg animation
+    gsap.to(".burger-img",{scale:1})
     burgerTimeline.to(".burger-img", {
       y: 100,
       duration: 3,
@@ -89,7 +90,7 @@ const Hero = () => {
     );
   }, []);
   return (
-    <section id="hero" className="hero-height ">
+    <section id="hero" className="hero-height">
       <div id="top-section" className="grid place-items-center">
         <h1 className="title col-start-1 row-start-1 sm:text-[30vw] text-[130px] font-bolder leading-none sm:font-bold  whitespace-nowrap pointer-events-none select-none font-memories sm:[-webkit-text-stroke:16px_white] [paint-order:stroke] text-red-500 text-center sm:tracking-[25px] -translate-y-5 relative w-screen [-webkit-text-stroke:5px_white]">
           BURGER
@@ -108,7 +109,7 @@ const Hero = () => {
         </h1>
 
         <div className="relative w-full flex justify-center items-center md:-translate-y-15 p-5 gap-4">
-          <div className="left absolute  right-[80vw] top-1/2 -translate-y-1/2 max-w-xs md:text-2xl  text-sm   text-start font-memories font-normal pl-3 pr-2">
+          <div className="left absolute  right-[80vw] top-1/2 -translate-y-1/2 max-w-xs md:text-2xl  text-[13px]   text-start font-memories font-normal pl-3 pr-2">
             Smashed hot on the flat top, our prime patties lock in ultimate
             juiciness under a caramelized crust.
           </div>
@@ -117,7 +118,7 @@ const Hero = () => {
             HOUSE
           </span>
 
-          <div className="right absolute   left-[80vw] top-1/2 -translate-y-1/2 max-w-xs text-sm md:text-[22px] pr-3   pl-7 text-start font-memories font-normal">
+          <div className="right absolute   left-[80vw] top-1/2 -translate-y-1/2 max-w-xs text-[13px] md:text-[22px] pr-3   pl-7 text-start font-memories font-normal">
             Topped with melted cheddar and our signature chili honey glaze
             crafted to satisfy your cravings.
           </div>
@@ -126,7 +127,7 @@ const Hero = () => {
         <img
           src="/images/burgerH.webp"
           alt="Burger"
-          className="burger-img col-start-1 row-start-1 z-10 w-100 md:w-135 translate-y-32 md:translate-y-40"
+          className="burger-img col-start-1 row-start-1 z-10 w-100 md:w-135 translate-y-32 md:translate-y-40 scale-0"
         />
       </div>
     </section>
