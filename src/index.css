@@ -2,18 +2,21 @@
 
 body,
 html {
-  background-color: #ffbb7887;
+  background-color: #ffc286;
   color: black;
    
   scroll-behavior: smooth;
 }
 
 .hero-height{
-  /* min-height: calc(100vh - 64px) ; */
+  min-height: fit-content ;
 }
 
 .redText {
   color: oklch(76.9% 0.188 70.08)
+}
+section{
+  background-color:  #ffc286 ;
 }
 
 @font-face {
