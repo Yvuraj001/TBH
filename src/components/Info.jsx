@@ -2,14 +2,13 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/all";
+import { InertiaPlugin } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const Info = () => {
   useGSAP(() => {
     const paraLines = new SplitText(".bottomText-text", { type: "lines" });
     gsap.set([".topText-1", ".topText-2"], { scale: 0 });
-
-    console.log(paraLines.lines);
 
     // animating top text
     const textTl = gsap.timeline({
@@ -22,8 +21,8 @@ const Info = () => {
 
     textTl
       .to(".topText-1", { scale: 1, duration: 1.8, ease: "elastic.out" }, 0)
-      .to(".topText-2", { scale: 1, duration: 1.8, ease: "elastic.out" }, 0.2)
-      
+      .to(".topText-2", { scale: 1, duration: 1.8, ease: "elastic.out" }, 0.2);
+
     // animating bottomText
 
     textTl.fromTo(
@@ -38,10 +37,46 @@ const Info = () => {
         duration: 0.8,
         ease: "expo",
         stagger: 0.3,
-        delay: 0.7
+        delay: 0.7,
       },
       0.4,
     );
+
+    // animating images in bottom with cursor intraction
+
+    let oldX = 0;
+    let oldY = 0;
+    let displacedX = 0;
+    let displacedY = 0;
+    let speed = 80;
+    
+    window.addEventListener("mousemove", (e) => {
+      displacedX = e.clientX - oldX;
+      displacedY = e.clientY - oldY;
+      oldX = e.clientX;
+      oldY = e.clientY;
+    });
+
+    document.querySelectorAll(".images").forEach((i) => {
+      i.addEventListener("mouseenter", () => {
+        const tl = gsap.timeline();
+        const images = i.querySelector("img");
+        const maxV = 900;
+
+        tl.to(images, {
+          inertia: {
+            x: {
+              velocity: gsap.utils.clamp(-maxV, maxV, displacedX * speed),
+              end: 0,
+            },
+            y: {
+              velocity: gsap.utils.clamp(-maxV, maxV, displacedY * speed),
+              end: 0,
+            },
+          },
+        });
+      });
+    });
   }, []);
   return (
     <section id="info" className="h-full relative mt-5 ">
@@ -66,14 +101,14 @@ const Info = () => {
         </div>
       </div>
       <div className="bottomSection flex  items-center gap-9 mt-10 relative w-[70vw] mx-auto">
-        <div className="max-w-1/3 object-cover">
+        <div className="max-w-1/3 object-cover images">
           <img
             src="/images/about-1.jpg"
             className=" rounded-2xl rotate-11"
             alt=""
           />
         </div>
-        <div className="max-w-1/3 object-cover">
+        <div className="max-w-1/3 object-cover images">
           {" "}
           <img
             src="/images/about-2.jpg"
@@ -81,7 +116,7 @@ const Info = () => {
             alt=""
           />
         </div>
-        <div className="max-w-1/3 object-cover">
+        <div className="max-w-1/3 object-cover images">
           <img
             src="/images/about-3.jpg"
             className="  rounded-2xl rotate-12"
@@ -102,3 +137,39 @@ const Info = () => {
 };
 
 export default Info;
+
+// useGSAP(() => {
+//   let oldX = 0;
+//   let oldY = 0;
+//   let displacedX = 0;
+//   let displacedY = 0;
+//   let speed = 30;
+
+//   window.addEventListener("mousemove", (e) => {
+//     displacedX = e.clientX - oldX;
+//     displacedY = e.clientY - oldY;
+//     oldX = e.clientX;
+//     oldY = e.clientY;
+//   });
+
+//   document.querySelectorAll(".images").forEach((i) => {
+//     i.addEventListener("mouseenter", () => {
+//       const tl = gsap.timeline();
+//       const images = i.querySelector("img");
+//       const maxV = 500;
+
+//       tl.to(images, {
+//         inertia: {
+//           x: {
+//             velocity: gsap.utils.clamp(-maxV, maxV, displacedX * speed),
+//             end: 0,
+//           },
+//           y: {
+//             velocity: gsap.utils.clamp(-maxV, maxV, displacedY * speed),
+//             end: 0,
+//           },
+//         },
+//       });
+//     });
+//   });
+// }, []);

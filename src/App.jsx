@@ -28,7 +28,7 @@ const App = () => {
 
   return (
     <DeviceBlock>
-      <main className="w-screen h-screen ">
+      <main className="w-screen h-screen   select-none">
         <Navbar />
         <Hero />
         <Info/>
