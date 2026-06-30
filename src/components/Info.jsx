@@ -1,4 +1,5 @@
 import gsap from "gsap";
+import JellyWave from "./wavedevider";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/all";
@@ -132,44 +133,10 @@ const Info = () => {
           />
         </div>
       </div>
+      <JellyWave />
     </section>
   );
 };
 
 export default Info;
-
-// useGSAP(() => {
-//   let oldX = 0;
-//   let oldY = 0;
-//   let displacedX = 0;
-//   let displacedY = 0;
-//   let speed = 30;
-
-//   window.addEventListener("mousemove", (e) => {
-//     displacedX = e.clientX - oldX;
-//     displacedY = e.clientY - oldY;
-//     oldX = e.clientX;
-//     oldY = e.clientY;
-//   });
-
-//   document.querySelectorAll(".images").forEach((i) => {
-//     i.addEventListener("mouseenter", () => {
-//       const tl = gsap.timeline();
-//       const images = i.querySelector("img");
-//       const maxV = 500;
-
-//       tl.to(images, {
-//         inertia: {
-//           x: {
-//             velocity: gsap.utils.clamp(-maxV, maxV, displacedX * speed),
-//             end: 0,
-//           },
-//           y: {
-//             velocity: gsap.utils.clamp(-maxV, maxV, displacedY * speed),
-//             end: 0,
-//           },
-//         },
-//       });
-//     });
-//   });
-// }, []);
+ 
