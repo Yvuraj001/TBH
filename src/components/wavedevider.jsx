@@ -45,9 +45,9 @@ export default function JellyWave({
   }, [amplitude, speed]);
 
   return (
-    <div className="z-[99] w-full absolute left-0 right-0 overflow-x-clip max-md:left-0 max-md:right-0  rotate-180">
+    <div className="z-99 w-full absolute left-0 right-0 overflow-x-clip max-md:left-0 max-md:right-0  rotate-180">
       <svg
-        className="pointer-events-none block w-full max-w-[100vw] h-[300px] max-md:h-auto"
+        className="pointer-events-none block w-full max-w-[100vw] h-75 max-md:h-auto"
         width="100%"
         viewBox="0 0 1536 300"
         fill="none"
