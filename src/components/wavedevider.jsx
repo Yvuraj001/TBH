@@ -14,9 +14,9 @@ const BASE_POINTS = [
 ];
 
 export default function JellyWave({
-  color = "#FF4128",
-  amplitude = 18,
-  speed = 0.6,
+  color = "#ff0000",
+  amplitude = 38,
+  speed = 0.8,
 }) {
   const pathRef = useRef(null);
 
@@ -45,7 +45,7 @@ export default function JellyWave({
   }, [amplitude, speed]);
 
   return (
-    <div className="z-99 w-full absolute left-0 right-0 overflow-x-clip max-md:left-0 max-md:right-0  rotate-180">
+    <div className="z-99 w-full relative left-0 right-0 overflow-x-clip max-md:left-0 max-md:right-0  rotate-180 h-25 max-md:h-12.5 bottom-0 mt-10 top-0">
       <svg
         className="pointer-events-none block w-full max-w-[100vw] h-75 max-md:h-auto"
         width="100%"

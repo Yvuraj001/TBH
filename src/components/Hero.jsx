@@ -3,126 +3,128 @@ import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
+
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const Hero = () => {
   useGSAP(() => {
-      document.fonts.ready.then(() => {
-    const burgerSplit = new SplitText(".title", { type: "chars" });
-    const leftParaSplit = new SplitText(".left", { type: "lines" });
-    const rightParaSplit = new SplitText(".right", { type: "lines" });
+    document.fonts.ready.then(() => {
+      const burgerSplit = new SplitText(".title", { type: "chars" });
+      const leftParaSplit = new SplitText(".left", { type: "lines" });
+      const rightParaSplit = new SplitText(".right", { type: "lines" });
 
-    const burgerTimeline = gsap.timeline();
-    const titleArray = gsap.utils.toArray(burgerSplit.chars);
+      const burgerTimeline = gsap.timeline();
+      const titleArray = gsap.utils.toArray(burgerSplit.chars);
 
-    titleArray[0].classList.add("redText");
-    titleArray[5].classList.add("redText");
+      titleArray[0].classList.add("redText");
+      titleArray[5].classList.add("redText");
 
-    // title's two char animation
-    gsap.to(titleArray[0], {
-      y: 30,
-      rotation: -10,
-      duration: 1.4,
-      repeat: 4,
-      repeatDelay: 2,
-      yoyo: true,
-      ease: "bounce",
-      delay: 1.5,
-    });
-    gsap.to(titleArray[5], {
-      y: 30,
-      x: 7,
-      rotation: 12,
-      duration: 1.4,
-      repeat: 3,
-      repeatDelay: 2,
-      yoyo: true,
-      ease: "bounce",
-      delay: 1.5,
-    });
-
-    gsap.to(
-      ".burger-text",
-      {
-        scale: 1,
-        duration: 1.8,
-        ease: "elastic.out",
-      },
-      0.2,
-    );
-    gsap.to(
-      ".house",
-      {
-        scale: 1,
-        duration: 1.8,
-        ease: "elastic.out",
-      },
-      0.4,
-    );
-
-    // burgerimg animation
-    gsap.to(".burger-img", { scale: 1 });
-    burgerTimeline.to(
-      ".burger-img",
-      {
-        y: 100,
-        duration: 3,
-        repeat: -1,
+      // title's two char animation
+      gsap.to(titleArray[0], {
+        y: 30,
+        rotation: -10,
+        duration: 1.4,
+        repeat: 4,
+        repeatDelay: 2,
         yoyo: true,
-      },
-      0.6,
-    );
+        ease: "bounce",
+        delay: 1.5,
+      });
+      gsap.to(titleArray[5], {
+        y: 30,
+        x: 7,
+        rotation: 12,
+        duration: 1.4,
+        repeat: 3,
+        repeatDelay: 2,
+        yoyo: true,
+        ease: "bounce",
+        delay: 1.5,
+      });
 
-    // animating Veggies
-    gsap.to(".tomato", {
-      left: -120,
-      duration: 1.1,
-      ease: "expo.out",
-      delay: 1.4,
-    });
-    gsap.to(".lettuce", {
-      right: -150,
-      duration: 1.1,
-      ease: "expo.out",
-      delay: 1.5,
-    });
+      gsap.to(
+        ".burger-text",
+        {
+          scale: 1,
+          duration: 1.8,
+          ease: "elastic.out",
+        },
+        0.2,
+      );
+      gsap.to(
+        ".house",
+        {
+          scale: 1,
+          duration: 1.8,
+          ease: "elastic.out",
+        },
+        0.4,
+      );
 
-    // animating left and right text lines
-    gsap.fromTo(
-      leftParaSplit.lines,
-      {
-        opacity: 0.1,
-      },
-      {
-        opacity: 1,
-        duration: 0.9,
-        delay: 0.7,
-        stagger: 0.3,
-        ease: "power1.in",
-      },
-    );
-    gsap.fromTo(
-      rightParaSplit.lines,
-      {
-        opacity: 0.3,
-      },
-      {
-        opacity: 1,
-        duration: 0.9,
-        delay: 0.7,
-        stagger: 0.3,
-        ease: "power1.in",
-      },
-    );
-  })
+      // burgerimg animation
+      gsap.to(".burger-img", { scale: 1 });
+      burgerTimeline.to(
+        ".burger-img",
+        {
+          y: 100,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+        },
+        0.6,
+      );
+
+      // animating Veggies
+      gsap.to(".tomato", {
+        left: -120,
+        duration: 1.1,
+        ease: "expo.out",
+        delay: 1.4,
+      });
+      gsap.to(".lettuce", {
+        right: -150,
+        duration: 1.1,
+        ease: "expo.out",
+        delay: 1.5,
+      });
+
+      // animating left and right text lines
+      gsap.fromTo(
+        leftParaSplit.lines,
+        {
+          opacity: 0.1,
+        },
+        {
+          opacity: 1,
+          duration: 0.9,
+          delay: 0.7,
+          stagger: 0.3,
+          ease: "power1.in",
+        },
+      );
+      gsap.fromTo(
+        rightParaSplit.lines,
+        {
+          opacity: 0.3,
+        },
+        {
+          opacity: 1,
+          duration: 0.9,
+          delay: 0.7,
+          stagger: 0.3,
+          ease: "power1.in",
+        },
+      );
+    });
   }, []);
   return (
+    
     <section id="hero" className="hero-height overflow-x-hidden">
-      <div id="top-section" className="grid place-items-center">
+      <div id="top-section" className="grid place-items-center relative">
 
-        <h1 className="title col-start-1 row-start-1 sm:text-[30vw] text-[130px] font-bolder leading-none sm:font-bold  whitespace-nowrap pointer-events-none select-none font-memories sm:[-webkit-text-stroke:16px_white] [paint-order:stroke] text-red-500 text-center sm:tracking-[25px] -translate-y-5 relative w-screen [-webkit-text-stroke:5px_white]">
-          
+        <h1 className="title col-start-1 row-start-1 sm:text-[30vw] text-[130px] font-bolder leading-none sm:font-bold  whitespace-nowrap pointer-events-none select-none font-memories sm:[-webkit-text-stroke:16px_white] [paint-order:stroke] text-red-500 text-center sm:tracking-[25px] -translate-y-5 relative w-full [-webkit-text-stroke:5px_white]">
           <div className={`burger-text scale-0`}>BURGER</div>
+
           <div className="veggies-img flex justify-start  ">
             <img
               src="/images/tomato.webp"
@@ -138,7 +140,6 @@ const Hero = () => {
         </h1>
 
         <div className="relative w-full flex flex-col items-center justify-center lg:flex-row lg:-translate-y-15 p-5 gap-4">
-
           <div className="left order-2 relative lg:absolute lg:order-1 lg:right-[80vw] lg:top-1/2 lg:-translate-y-1/2 max-w-md lg:text-2xl text-[20px] text-center lg:text-start font-memories pl-3 pr-2 font-light">
             Smashed hot on the flat top, our prime patties lock in ultimate
             juiciness under a caramelized crust.
@@ -159,6 +160,7 @@ const Hero = () => {
           alt="Burger"
           className="burger-img col-start-1 row-start-1 z-10 w-100  lg:w-135 translate-y-32 lg:translate-y-40 scale-0  "
         />
+      
       </div>
     </section>
   );

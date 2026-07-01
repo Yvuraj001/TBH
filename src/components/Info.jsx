@@ -15,7 +15,7 @@ const Info = () => {
     const textTl = gsap.timeline({
       scrollTrigger: {
         trigger: "#info",
-        start: "top 75%",
+        start: "top 90%",
         toggleActions: "play none none none",
       },
     });
@@ -80,7 +80,7 @@ const Info = () => {
     });
   }, []);
   return (
-    <section id="info" className="h-full relative mt-5 ">
+    <section id="info" className="relative mt-5 ">
       <div className="textSection font-Memories relative">
         <div className="top absolute text-[5vw] md:text-[4vw] font-modak [-webkit-text-stroke:12px_white] [paint-order:stroke] text-[#ff0f0f] rotate-335 md:left-25 left-20 z-10">
           Top Classic
@@ -101,6 +101,7 @@ const Info = () => {
           </div>
         </div>
       </div>
+
       <div className="bottomSection flex  items-center gap-9 mt-10 relative w-[70vw] mx-auto">
         <div className="max-w-1/3 object-cover images">
           <img
@@ -133,7 +134,10 @@ const Info = () => {
           />
         </div>
       </div>
+      <div className="jelly relative mt-40">
+
       <JellyWave />
+      </div>
     </section>
   );
 };

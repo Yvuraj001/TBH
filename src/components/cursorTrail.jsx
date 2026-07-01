@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
@@ -10,20 +11,24 @@ const DEFAULT_ITEMS = [
 
 export default function CursorTrail({
   items = DEFAULT_ITEMS,
-  lag = 0.2, // 0-1, lower = laggier chain
-  headEase = 0.17, // how fast the lead bubble catches the real cursor
-  size = "3vw", // bubble diameter (desktop)
-  mobileSize = "9vw", // bubble diameter (mobile, only relevant if you remove max-md:hidden)
-  lineWidth = 3, // white trail thickness in px
+  trailLength = 22, // total points along the line — more = longer, flexible curve
+  ease = 0.51, // how fast each point chases the one before it
+  size = "3vw",
+  lineWidth = 3,
 }) {
   const pathRef = useRef(null);
   const bubbleRefs = useRef([]);
+  const points = useRef([]);
 
   useEffect(() => {
-    if (window.matchMedia("(max-width: 768px)").matches) return; // desktop only
+    if (window.matchMedia("(max-width: 1096px)").matches) return;
 
     const mouse = { x: innerWidth / 2, y: innerHeight / 2 };
-    const positions = items.map(() => ({ ...mouse }));
+    points.current = Array.from({ length: trailLength }, () => ({ ...mouse }));
+
+    // bubbles are markers at evenly spaced indices along the dense trail
+    const step = (trailLength - 1) / (items.length - 1);
+    const bubbleIndices = items.map((_, i) => Math.round(i * step));
 
     bubbleRefs.current.forEach((el) => {
       if (el)
@@ -36,36 +41,38 @@ export default function CursorTrail({
     };
     window.addEventListener("mousemove", onMove);
 
+    // Catmull-Rom -> Bezier through every point = smooth flexible curve
     const buildPath = (pts) => {
       let d = `M ${pts[0].x} ${pts[0].y}`;
-      for (let i = 1; i < pts.length - 1; i++) {
-        const xc = (pts[i].x + pts[i + 1].x) / 2;
-        const yc = (pts[i].y + pts[i + 1].y) / 2;
-        d += ` Q ${pts[i].x} ${pts[i].y} ${xc} ${yc}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i - 1] || pts[i];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2] || p2;
+        const c1x = p1.x + (p2.x - p0.x) / 6;
+        const c1y = p1.y + (p2.y - p0.y) / 6;
+        const c2x = p2.x - (p3.x - p1.x) / 6;
+        const c2y = p2.y - (p3.y - p1.y) / 6;
+        d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
       }
-      const last = pts[pts.length - 1];
-      d += ` L ${last.x} ${last.y}`; // finish exactly at the lead point
       return d;
     };
 
     const tick = () => {
-      // lead bubble eases straight toward the cursor
-      positions[0].x += (mouse.x - positions[0].x) * headEase;
-      positions[0].y += (mouse.y - positions[0].y) * headEase;
-
-      for (let i = 1; i < positions.length; i++) {
-        positions[i].x += (positions[i - 1].x - positions[i].x) * lag;
-        positions[i].y += (positions[i - 1].y - positions[i].y) * lag;
+      const pts = points.current;
+      pts[0].x += (mouse.x - pts[0].x) * ease;
+      pts[0].y += (mouse.y - pts[0].y) * ease;
+      for (let i = 1; i < pts.length; i++) {
+        pts[i].x += (pts[i - 1].x - pts[i].x) * ease;
+        pts[i].y += (pts[i - 1].y - pts[i].y) * ease;
       }
-      positions.forEach((p, i) => {
+
+      bubbleIndices.forEach((idx, i) => {
         const el = bubbleRefs.current[i];
-        if (el) gsap.set(el, { x: p.x, y: p.y });
+        if (el) gsap.set(el, { x: pts[idx].x, y: pts[idx].y });
       });
 
-      // line is drawn through every bubble's current center, in order —
-      // anchored to the eased lead bubble (not the raw cursor) so the
-      // line stays synced to the first image, never poking out past it
-      pathRef.current?.setAttribute("d", buildPath(positions));
+      pathRef.current?.setAttribute("d", buildPath(pts));
     };
 
     gsap.ticker.add(tick);
@@ -73,10 +80,10 @@ export default function CursorTrail({
       window.removeEventListener("mousemove", onMove);
       gsap.ticker.remove(tick);
     };
-  }, [items, lag, headEase]);
+  }, [items, trailLength, ease]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[10000] max-md:hidden">
+    <div className="pointer-events-none fixed inset-0 z-[10000] max-[1096px]:hidden">
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
         <path
           ref={pathRef}

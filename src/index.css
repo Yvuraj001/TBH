@@ -4,10 +4,14 @@ body,
 html {
   background-color: #ffc286;
   color: black;
-   
+  
   scroll-behavior: smooth;
+  
+  overflow-x: clip;
+  
 }
-
+ 
+ 
 .hero-height{
   min-height: fit-content ;
 }
@@ -15,7 +19,7 @@ html {
 .redText {
   color: oklch(76.9% 0.188 70.08)
 }
-section{
+#info, #hero{
   background-color:  #ffc286 ;
 }
 
