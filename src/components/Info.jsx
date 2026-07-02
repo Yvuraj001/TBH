@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/all";
 import { InertiaPlugin } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
+
 const Info = () => {
   useGSAP(() => {
     const paraLines = new SplitText(".bottomText-text", { type: "lines" });

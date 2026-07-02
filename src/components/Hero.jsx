@@ -4,7 +4,7 @@ import { SplitText } from "gsap/all";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 
-gsap.registerPlugin(SplitText, ScrollTrigger);
+
 
 const Hero = () => {
   useGSAP(() => {

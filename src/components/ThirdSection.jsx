@@ -1,31 +1,85 @@
 import Eyes from "./Eyes";
 import JellyWave from "./wavedevider";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+import { ScrollTrigger } from "gsap/all";
 
 const ThirdSection = () => {
+  useGSAP(() => {
+    const text1 = new SplitText(".mainText-1", { type: "chars, words" });
+    const text2 = new SplitText(".mainText-2", { type: "chars, words" });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".mainText-1",
+        start: "top 80%",
+      },
+    });
+
+    // animating letters of the wor
+    tl.fromTo(
+      text1.words,
+
+      {
+        scale: 0,
+        rotateX: 50,
+        rotation: 25, 
+        x: 30, 
+        transformOrigin: "50% 50%",
+      },
+      {
+        scale: 1,
+        rotation: 0,
+        x: 0,
+        duration: 1.1,
+        stagger: 0.1,
+        ease: "elastic.out(1, 0.5)",
+      },
+    );
+    tl.fromTo(
+      text2.words,
+      {
+        scale: 0,
+        rotation: 25,  
+        x: 30, 
+        transformOrigin: "50% 50%",
+      },
+      {
+        scale: 1,
+        rotation: 0,
+        x: 0,
+        duration: 1.1,
+        stagger: 0.1,
+        ease: "elastic.out(1, 0.5)",
+      },
+      0.2,
+    );
+  }, []);
   return (
     <section id="third" className="bg-[#ff0000] relative top-0 ">
       <div className="main flex items-center flex-col  relative overflow-x-hidden">
-        <div className="topMostText font-modak [-webkit-text-stroke:12px_white] [paint-order:stroke] text-[#ff0000] text-4xl md:text-[4vw] -rotate-5 md:left-25 left-20 z-1000 h-10 mt-5 md:mt-0 ">
+        <div className="topMostText font-modak [-webkit-text-stroke:12px_white] [paint-order:stroke] text-[#ff0000] text-4xl md:text-[4vw] -rotate-5 md:left-25 left-20 z-1000 h-10 mt-5 md:mt-2 ">
           Experience
         </div>
         <div className="topSection text-[16vw] font-memories tracking-wide flex flex-col text-[#ffffc7] mt-15 ">
-          <span className="lg:h-57.5 h-20 relative flex items-center">
+          <span className="mainText-1 lg:h-57.5 h-20 relative flex items-center text-shadow-2xl ">
             <img
               src="/images/fries.webp"
               alt=""
-              className="absolute right-full mr-[2vw] w-[10vw] md:w-[13vw] rotate-13"
+              className="absolute right-full mr-[2vw] w-[10vw] md:w-[13vw] rotate-13 "
             />
             Food That
           </span>
 
-          <span className="lg:h-58.5 h-25 relative flex items-center text-shadow-2xl">
+          <span className=" mainText-2 lg:h-58.5 h-25 relative flex items-center text-shadow-2xl  ">
             Feels Good
             <div className="absolute left-full ml-[2vw] w-[13vw] md:w-[19vw] rotate-15">
               <img src="/images/burger.webp" alt="" className="w-full" />
             </div>
           </span>
         </div>
-        <div className="bottomSection font-memories text-2xl lg:text-[1.7vw] flex items-center justify-around p-5 w-full overflow-x-hidden">
+        <div className="bottomSection font-memories text-2xl lg:text-[1.7vw] flex items-center justify-around px-5 w-full overflow-x-hidden text-[#fcffbf] mt-10">
           <div className="leftText w-40 3xl:w-69 relative top-10 font-bold tracking-wide">
             40 kcal <br /> High Protien <br /> Fresh Ingredient
           </div>

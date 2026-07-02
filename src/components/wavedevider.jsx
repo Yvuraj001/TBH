@@ -15,9 +15,10 @@ const BASE_POINTS = [
 
 export default function JellyWave({
   color = "#ff0000",
-  amplitude = 38,
+  amplitude = 28,
   speed = 0.8,
-}) {
+}) 
+{
   const pathRef = useRef(null);
 
   useEffect(() => {
