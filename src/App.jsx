@@ -5,6 +5,7 @@ import Info from "./components/Info";
 import CursorTrail from "./components/cursorTrail";
 import ThirdSection from "./components/ThirdSection";
 import FourthSection from "./components/FourthSection";
+import FifthSection from "./components/FifthSection";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {SplitText} from "gsap/all";
 import {InertiaPlugin} from "gsap/all";
@@ -49,7 +50,7 @@ const App = () => {
         <Info />
         <ThirdSection />
         <FourthSection />
-        
+        <FifthSection/>
       </main>
     </DeviceBlock>
   );

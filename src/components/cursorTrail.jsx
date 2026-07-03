@@ -83,7 +83,7 @@ export default function CursorTrail({
   }, [items, trailLength, ease]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[10000] max-[1096px]:hidden">
+    <div className="pointer-events-none fixed inset-0 z-10000 max-[1096px]:hidden">
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
         <path
           ref={pathRef}
