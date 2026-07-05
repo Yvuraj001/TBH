@@ -1,3 +1,4 @@
+"use client";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import DeviceBlock from "./components/DeviceBlock";
@@ -8,8 +9,8 @@ import FourthSection from "./components/FourthSection";
 import FifthSection from "./components/FifthSection";
 import Footer from "./components/Footer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {SplitText} from "gsap/all";
-import {InertiaPlugin} from "gsap/all";
+import { SplitText } from "gsap/all";
+import { InertiaPlugin } from "gsap/all";
 import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
@@ -51,11 +52,11 @@ const App = () => {
         <Info />
         <ThirdSection />
         <FourthSection />
-        <FifthSection/>
+        <FifthSection />
         <Footer />
       </main>
     </DeviceBlock>
   );
-};;
+};
 
 export default App;
