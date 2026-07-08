@@ -1,8 +1,9 @@
+"use client";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText.js";
-import ScrollTrigger from "gsap/ScrollTrigger.js";
-import { useRef } from "react";
+import ScrollTrigger from "gsap/all";
+import { use, useRef } from "react";
 const Footer = () => {
   const footerRef = useRef(null);
 

@@ -1,3 +1,4 @@
+"use client";
 import Eyes from "./Eyes";
 import JellyWave from "./wavedevider";
 import gsap from "gsap";
@@ -24,8 +25,8 @@ const ThirdSection = () => {
       {
         scale: 0,
         rotateX: 50,
-        rotation: 25, 
-        x: 30, 
+        rotation: 25,
+        x: 30,
         transformOrigin: "50% 50%",
       },
       {
@@ -41,8 +42,8 @@ const ThirdSection = () => {
       text2.words,
       {
         scale: 0,
-        rotation: 25,  
-        x: 30, 
+        rotation: 25,
+        x: 30,
         transformOrigin: "50% 50%",
       },
       {

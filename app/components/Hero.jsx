@@ -1,10 +1,8 @@
+"use client";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 import ScrollTrigger from "gsap/ScrollTrigger";
-
-
-
 
 const Hero = () => {
   useGSAP(() => {

@@ -1,3 +1,4 @@
+"use client";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText.js";
@@ -7,70 +8,70 @@ const FifthSection = () => {
   useGSAP(() => {
     const texts = new SplitText(".textContainer", { type: "lines" });
 
-  gsap.fromTo(
-    ".text-1",
-    { y: 400 },
-    {
-      y: 0,
-      duration: 1.4,
-      ease: "expo",
-      scrollTrigger: { trigger: ".text-1", start: "top 130%" },
-    },
-  );
-  gsap.fromTo(
-    ".text-2",
-    { y: 400 },
-    {
-      y: 0,
-      duration: 1.4,
-      ease: "expo",
-      scrollTrigger: { trigger: ".text-2", start: "top 130%" },
-    },
-  );
-  gsap.fromTo(
-    ".text-3",
-    { y: 400 },
-    {
-      y: 0,
-      duration: 1.4,
-      ease: "expo",
-      scrollTrigger: { trigger: ".text-3", start: "top 130%" },
-    },
-  );
-  gsap.fromTo(
-    ".text-4",
-    { y: 400 },
-    {
-      y: 0,
-      duration: 1.4,
-      ease: "expo",
-      scrollTrigger: { trigger: ".text-3", start: "top 130%" },
-    },
-  );
-
-  // animating image opacity
-  ["1", "2", "3", "4"].forEach((n) => {
     gsap.fromTo(
-      `.text-${n}`,
+      ".text-1",
       { y: 400 },
       {
         y: 0,
         duration: 1.4,
         ease: "expo",
-        scrollTrigger: { trigger: `.text-${n}`, start: "top 130%" },
+        scrollTrigger: { trigger: ".text-1", start: "top 130%" },
       },
     );
     gsap.fromTo(
-      `.img-${n}`,
-      { opacity: 0 },
+      ".text-2",
+      { y: 400 },
       {
-        opacity: 1,
+        y: 0,
         duration: 1.4,
         ease: "expo",
-        scrollTrigger: { trigger: `.text-${n}`, start: "top 130%" },
+        scrollTrigger: { trigger: ".text-2", start: "top 130%" },
       },
     );
-  });
+    gsap.fromTo(
+      ".text-3",
+      { y: 400 },
+      {
+        y: 0,
+        duration: 1.4,
+        ease: "expo",
+        scrollTrigger: { trigger: ".text-3", start: "top 130%" },
+      },
+    );
+    gsap.fromTo(
+      ".text-4",
+      { y: 400 },
+      {
+        y: 0,
+        duration: 1.4,
+        ease: "expo",
+        scrollTrigger: { trigger: ".text-3", start: "top 130%" },
+      },
+    );
+
+    // animating image opacity
+    ["1", "2", "3", "4"].forEach((n) => {
+      gsap.fromTo(
+        `.text-${n}`,
+        { y: 400 },
+        {
+          y: 0,
+          duration: 1.4,
+          ease: "expo",
+          scrollTrigger: { trigger: `.text-${n}`, start: "top 130%" },
+        },
+      );
+      gsap.fromTo(
+        `.img-${n}`,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.4,
+          ease: "expo",
+          scrollTrigger: { trigger: `.text-${n}`, start: "top 130%" },
+        },
+      );
+    });
     ScrollTrigger.refresh();
   }, []);
   return (
@@ -98,14 +99,22 @@ const FifthSection = () => {
 
         <div className="relative -mt-5 md:-mt-7 lg:-mt-10 overflow-hidden">
           <div className="imgCont img-3 absolute lg:top-20 lg:left-70 left-20 ">
-            <img src="/images/img-webp/cheese.webp" className="lg:w-90 w-50" alt="" />
+            <img
+              src="/images/img-webp/cheese.webp"
+              className="lg:w-90 w-50"
+              alt=""
+            />
           </div>
           <span className="text-3 inline-block relative">SIGNATURE</span>
         </div>
 
         <div className="relative -mt-8 md:-mt-8 lg:-mt-12 overflow-hidden">
           <div className="imgCont img-4 absolute l top-10 lg:right-80 right-40 ">
-            <img src="/images/img-webp/meat.webp" className="lg:w-70 w-30 md:block hidden xl:block lg:hidden" alt="" />
+            <img
+              src="/images/img-webp/meat.webp"
+              className="lg:w-70 w-30 md:block hidden xl:block lg:hidden"
+              alt=""
+            />
           </div>
           <span className="text-4 inline-block relative text-[16vw]">
             FLAVOUR

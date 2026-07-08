@@ -1,3 +1,4 @@
+"use client"
 import gsap from "gsap";
 import JellyWave from "./wavedevider";
 import { useGSAP } from "@gsap/react";

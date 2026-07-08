@@ -1,4 +1,5 @@
 "use client";
+
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import DeviceBlock from "./components/DeviceBlock";
@@ -11,36 +12,23 @@ import Footer from "./components/Footer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/all";
 import { InertiaPlugin } from "gsap/all";
-import { useEffect } from "react";
-import Lenis from "lenis";
+import LenisConfig from "./LenisConfig";
 import gsap from "gsap";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const App = () => {
-  // lenis scroll
-
-  useEffect(() => {
-    const lenis = new Lenis();
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    // single source of truth for the raf loop — removed the duplicate requestAnimationFrame loop
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      gsap.ticker.remove((time) => lenis.raf(time * 1000)); // clean up ticker too
-      lenis.destroy();
-    };
-  }, []);
-
   return (
     <DeviceBlock>
+      <LenisConfig />
       <CursorTrail
         items={[
           { src: "/images/img-webp/lettuce.webp", alt: "lettuce" },
           { src: "/images/img-webp/tomato.webp", alt: "tomato" },
-          { src: "/images/img-webp/cheese.webp", alt: "cheese", rotate: -135 },
+          {
+            src: "/images/img-webp/cheese.webp",
+            alt: "cheese",
+            rotate: -135,
+          },
           { src: "/images/img-webp/meat.webp", alt: "patty" },
         ]}
         ineWidth={10}
