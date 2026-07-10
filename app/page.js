@@ -1,8 +1,7 @@
 "use client";
 
 import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import DeviceBlock from "./components/DeviceBlock";
+import LenisConfig from "./LenisConfig";
 import Info from "./components/Info";
 import CursorTrail from "./components/cursorTrail";
 import ThirdSection from "./components/ThirdSection";
@@ -12,14 +11,14 @@ import Footer from "./components/Footer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/all";
 import { InertiaPlugin } from "gsap/all";
-import LenisConfig from "./LenisConfig";
+
 import gsap from "gsap";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const App = () => {
   return (
-    <DeviceBlock>
-      <LenisConfig />
+    <>
+    <LenisConfig/>
       <CursorTrail
         items={[
           { src: "/images/img-webp/lettuce.webp", alt: "lettuce" },
@@ -35,7 +34,6 @@ const App = () => {
         size={"32px"}
       />
       <main className="w-full select-none">
-        <Navbar />
         <Hero />
         <Info />
         <ThirdSection />
@@ -43,7 +41,7 @@ const App = () => {
         <FifthSection />
         <Footer />
       </main>
-    </DeviceBlock>
+    </>
   );
 };
 

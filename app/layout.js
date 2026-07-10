@@ -1,5 +1,6 @@
 import "./globals.css";
-import { QuantityProvider } from "./Context/context";
+import Navbar from "./components/Navbar";
+import DeviceBlock from "./components/DeviceBlock";
 
 export const metadata = {
   title: "TBH",
@@ -10,8 +11,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
-       
-        <QuantityProvider>{children}</QuantityProvider>
+         
+        <DeviceBlock>
+          <Navbar />
+          {children}
+        </DeviceBlock>
       </body>
     </html>
   );

@@ -67,3 +67,7 @@ html {
 @utility burger-btn {
   @apply bg-red-500 text-white px-3 text-sm sm:text-lg md:px-5 sm:py-2.5 py-1.5 rounded-3xl cursor-pointer    hover:bg-black transition-all ease-in duration-150 hover:transform hover:scale-[1.09];
 }
+
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }

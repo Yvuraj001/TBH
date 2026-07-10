@@ -2,21 +2,36 @@
 import menuItems from "../components/Menu";
 import MenuCard from "../components/MenuCard";
 import CartPopup from "../components/CartOverlay";
+import FilterBar from "../components/Filters";
 import { useState } from "react";
-
-const MenuPage = () => {
-
-  const [cartItems, setCartItems] = useState([]);
-  const [cartVisiblity, setcartVisiblity] = useState(false);
-
-  // getting cart info
-  const onCardClick = (item, quantity) => {
-     setCartItems((prev) => [...prev, { ...item, quantity }]);
-
+import MenuHeader from "../components/menuHeader";
  
 
-   
+const MenuPage = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [cartVisiblity, setcartVisiblity] = useState(false);
+  const [notificationVisiblity, setnotificationVisiblity] = useState(false);
+  const [active, setActive] = useState(0);
+  const [selectedFilter, setselectedFilter] = useState("All");
+
+  const categories = [
+    "All",
+    "Starters",
+    "Burger",
+    "Chicken",
+    "Rise",
+    "Sides",
+    "Dessert",
+    "Beverages",
+    "Chef Specials",
+  ];
+  // getting cart info
+  const onCardClick = (item, quantity) => {
+    setCartItems((prev) => [...prev, { ...item, quantity }]);
+    setnotificationVisiblity(true);
+    notificationFunction();
   };
+
   // showing cart
   const showCart = () => {
     setcartVisiblity(!cartVisiblity);
@@ -24,37 +39,97 @@ const MenuPage = () => {
 
   // hiding cart
   const handleCartClose = () => {
-    setcartVisiblity(!cartVisiblity);
+    setcartVisiblity((prev) => !prev);
   };
 
-  // increment and decrement fo items
+  // UpdateQuantity
+  const updateQuantity = (id, change) => {
+    setCartItems((prev) =>
+      prev.map((item) => {
+        if (item.quantity + change < 1) {
+          return item.id === id ? { ...item, quantity: 1 } : item;
+        }
+
+        return item.id === id
+          ? { ...item, quantity: item.quantity + change }
+          : item;
+      }),
+    );
+  };
+  // handle Delete
+
+  const handleDelete = (id) => {
+    let newCart = cartItems.filter((item) => {
+      return item.id != id;
+    });
+
+    setCartItems(newCart);
+  };
+
+  const notificationFunction = () => {
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(setnotificationVisiblity(false));
+      }, 1200);
+    });
+  };
+  // sets filters
+  const handleActivity = (i) => {
+    setActive(i);
+    setselectedFilter(() => categories[i]);
+  };
+
+  const filteredItems =
+    selectedFilter == "All"
+      ? menuItems
+      : menuItems.filter(
+          (item) => item.type.toLowerCase() === selectedFilter.toLowerCase(),
+        );
+  
 
   return (
-    <main className="min-h-screen bg-[#f5e3cd]">
+    <main className="min-h-screen bg-[#ffc286]">
       <div className="cartOverlay">
         {cartVisiblity ? (
-          <CartPopup items={cartItems} onClose={handleCartClose} />
+          <CartPopup
+            items={cartItems}
+            onClose={handleCartClose}
+            updateQuantity={updateQuantity}
+            handleDelete={handleDelete}
+          />
         ) : (
           ""
         )}
       </div>
-      <section className="max-w-7xl mx-auto px-6 py-14">
-        <h1 className="font-modak text-red-500 [-webkit-text-stroke:6px_white] [paint-order:stroke] text-5xl md:text-6xl text-center mb-12">
-          Our Menu
-        </h1>
-
+      <section className=" mx-auto px-6 py-14 relative">
+        <MenuHeader />
+        <FilterBar
+          active={active}
+          setActive={setActive}
+          handleActivity={handleActivity}
+          categories={categories}
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {menuItems.map((item, index) => (
-            <MenuCard key={index} item={item} onCardClick={onCardClick} />
+          {filteredItems.map((item, index) => (
+            <MenuCard
+              key={index}
+              item={item}
+              onCardClick={onCardClick}
+              updateQuantity={updateQuantity}
+            />
           ))}
         </div>
 
         {/* cart icon */}
         <div
           onClick={showCart}
-          className="cartCont bg-red-500 fixed right-10 bottom-10   rounded-full flex items-center justify-center p-5 cursor-pointer hover:bg-black transition-colors duration-300"
+          className="cartCont bg-red-500 fixed right-10 bottom-10   rounded-full flex items-center justify-center p-5 cursor-pointer hover:bg-black transition-colors duration-300 z-10000"
         >
-       
+          <div
+            className={`alert absolute z-10000   bg-red-500 right-22 rounded-4xl px-4 py-2 text-white w-31.75  ${notificationVisiblity ? "opacity-[1]" : "opacity-0"} transition-opacity duration-500 ease-out`}
+          >
+            Item added !!
+          </div>
           <div className="svg">
             <svg
               width="24"

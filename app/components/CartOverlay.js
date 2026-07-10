@@ -1,12 +1,17 @@
-const CartPopup = ({ items, onClose }) => {
-  const reevaluatedCart = items.filter((item, index, array) => {
+
+ 
+const CartPopup = ({ items, onClose, updateQuantity , handleDelete}) => {
+  let reevaluatedCart = items.filter((item, index, array) => {
     return index === array.findIndex((i) => i.id === item.id);
   });
- 
+
+
+   
   let subtotal = reevaluatedCart
     .map((i) => i.price * i.quantity)
     .reduce((acc, curr) => acc + curr, 0);
 
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div
@@ -79,7 +84,7 @@ const CartPopup = ({ items, onClose }) => {
 
                   <div className="flex items-center gap-2 bg-black/5 rounded-full px-2 py-1 shrink-0">
                     <button
-                      //   onClick={() => onDecrement?.(item.id)}
+                      onClick={() => updateQuantity(item.id, -1)}
                       className="w-6 h-6 flex items-center justify-center rounded-full bg-white shadow cursor-pointer"
                     >
                       <svg
@@ -98,8 +103,7 @@ const CartPopup = ({ items, onClose }) => {
                       {item.quantity}
                     </span>
                     <button
-                      //   onClick={() => onIncrement?.(item.id)}
-
+                      onClick={() => updateQuantity(item.id, 1)}
                       className="w-6 h-6 flex items-center justify-center rounded-full bg-white shadow cursor-pointer"
                     >
                       <svg
@@ -116,9 +120,9 @@ const CartPopup = ({ items, onClose }) => {
                       </svg>
                     </button>
                   </div>
-
+                  {/* delete butotn */}
                   <button
-                    // onClick={() => onRemove?.(item.id)}
+                    onClick={() => handleDelete(item.id)}
                     aria-label={`Remove ${item.name}`}
                     className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-100 cursor-pointer shrink-0"
                   >
