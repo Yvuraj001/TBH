@@ -9,18 +9,19 @@ const Navbar = () => {
       </Link>
       <ul className="flex-center sm:gap-7 gap-3 text-white">
         <li>
-          <Link href="#burger">
-            <button className="burger-btn">ORDER</button>
-          </Link>
-        </li>
-        <li>
           <Link href="/menu">
             <button className="menu-btn">
               <span className="text-sm">MENU</span>
             </button>
           </Link>
         </li>
-         
+        <li>
+          <Link href="/orders">
+            <button className="burger-btn">
+              <span className="text-sm">ORDERS</span>
+            </button>
+          </Link>
+        </li>
       </ul>
     </nav>
   );
