@@ -91,7 +91,7 @@ const MenuPage = () => {
           ""
         )}
       </div>
-      <section className=" mx-auto px-6 py-14 relative">
+      <section className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
         <MenuHeader />
         <FilterBar
           active={active}
@@ -99,7 +99,14 @@ const MenuPage = () => {
           handleActivity={handleActivity}
           categories={categories}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3 px-2">
+          <div>
+            <p className="font-memories text-sm tracking-[0.2em] text-red-500 uppercase">Fresh from the kitchen</p>
+            <h2 className="mt-1 text-2xl font-black sm:text-3xl">Choose your delicious</h2>
+          </div>
+          <p className="rounded-full border-2 border-black/10 bg-white/70 px-4 py-2 text-sm font-bold">Cooked to perfection</p>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
           {filteredItems.map((item, index) => (
             <MenuCard
               key={index}
@@ -113,10 +120,10 @@ const MenuPage = () => {
         {/* cart icon */}
         <div
           onClick={showCart}
-          className="cartCont bg-red-500 fixed right-10 bottom-10   rounded-full flex items-center justify-center p-5 cursor-pointer hover:bg-black transition-colors duration-300 z-10000"
+          className="cartCont fixed bottom-6 right-5 z-10000 flex items-center justify-center rounded-full border-2 border-black bg-red-500 p-4 text-white shadow-[4px_4px_0_#000] transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-black hover:shadow-none cursor-pointer sm:bottom-9 sm:right-9 sm:p-5"
         >
           <div
-            className={`alert absolute z-10000   bg-red-500 right-22 rounded-4xl px-4 py-2 text-white w-31.75  ${notificationVisiblity ? "opacity-[1]" : "opacity-0"} transition-opacity duration-500 ease-out`}
+            className={`alert absolute right-16 z-10000 w-32 rounded-2xl border-2 border-black bg-yellow-400 px-4 py-2 text-center text-sm font-bold text-black shadow-[3px_3px_0_#000] sm:right-20 ${notificationVisiblity ? "opacity-[1]" : "opacity-0"} transition-opacity duration-500 ease-out`}
           >
             Item added !!
           </div>
