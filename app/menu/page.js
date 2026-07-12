@@ -1,5 +1,5 @@
 "use client";
-import menuItems from "../components/Menu";
+import {menuItems, categories} from "../components/Menu";
 import MenuCard from "../components/MenuCard";
 import CartPopup from "../components/CartOverlay";
 import FilterBar from "../components/Filters";
@@ -14,17 +14,7 @@ const MenuPage = () => {
   const [active, setActive] = useState(0);
   const [selectedFilter, setselectedFilter] = useState("All");
 
-  const categories = [
-    "All",
-    "Starters",
-    "Burger",
-    "Chicken",
-    "Rise",
-    "Sides",
-    "Dessert",
-    "Beverages",
-    "Chef Specials",
-  ];
+
   // getting cart info
   const onCardClick = (item, quantity) => {
     setCartItems((prev) => [...prev, { ...item, quantity }]);

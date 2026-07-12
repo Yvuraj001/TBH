@@ -1,24 +1,54 @@
-
- 
-const CartPopup = ({ items, onClose, updateQuantity , handleDelete}) => {
+import Script from "next/script";
+const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
   let reevaluatedCart = items.filter((item, index, array) => {
     return index === array.findIndex((i) => i.id === item.id);
   });
 
-
-   
   let subtotal = reevaluatedCart
     .map((i) => i.price * i.quantity)
     .reduce((acc, curr) => acc + curr, 0);
 
-  
+  const handleOrder = async () => {
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      body: JSON.stringify({cartItems: reevaluatedCart }),
+    });
+    
+    const data = await res.json();
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+      amount: data.amount,
+      currency: "INR",
+      name: "The Burger House",
+      description: "https://www.cravburgers.shop/favicon.ico",
+      image: "",
+      order_id: data.id,
+      handler: async function (response) {
+        const verifyRes = await fetch("/api/verifyOrder", {
+          method: "POST",
+          body: JSON.stringify(response),
+        });
+        const result = await verifyRes.json();
+
+        if (result.success) {
+          alert("Payment sucessful");
+        }
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    const pay = new Razorpay(options);
+    pay.open();
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <div className="relative w-full max-w-md bg-white rounded-4xl shadow-2xl overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-3 flex z-0">
           {Array.from({ length: 16 }).map((_, i) => (
@@ -151,12 +181,12 @@ const CartPopup = ({ items, onClose, updateQuantity , handleDelete}) => {
                 Subtotal
               </span>
               <span className="font-bold text-black text-2xl">
-                <span className="text-sm align-top">$</span>
+                <span className="text-xl align-center">₹</span>
                 {subtotal || 0}
               </span>
             </div>
             <button
-              //   onClick={}
+              onClick={handleOrder}
               className="w-full bg-red-500 hover:bg-black text-white font-bold text-sm tracking-wide py-3 rounded-full transition-colors cursor-pointer"
             >
               Checkout

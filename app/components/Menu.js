@@ -1,4 +1,4 @@
-const menuItems = [
+export const menuItems = [
   {
     id: 1,
     name: "Classic Smash Burger",
@@ -301,4 +301,14 @@ const menuItems = [
   },
 ];
 
-export default menuItems;
+export   const categories = [
+  "All",
+  "Starters",
+  "Burger",
+  "Chicken",
+  "Rise",
+  "Sides",
+  "Dessert",
+  "Beverages",
+  "Chef Specials",
+];
