@@ -1,5 +1,10 @@
+import { useState } from "react";
+import Link from "next/link";
 import Script from "next/script";
+
 const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
+  const [showSignin, setshowSignin] = useState(false);
+
   let reevaluatedCart = items.filter((item, index, array) => {
     return index === array.findIndex((i) => i.id === item.id);
   });
@@ -7,40 +12,58 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
   let subtotal = reevaluatedCart
     .map((i) => i.price * i.quantity)
     .reduce((acc, curr) => acc + curr, 0);
+ 
 
   const handleOrder = async () => {
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      body: JSON.stringify({cartItems: reevaluatedCart }),
+
+    const me = await fetch("/api/auth/me", {
+      method: "GET",
     });
-    
-    const data = await res.json();
 
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-      amount: data.amount,
-      currency: "INR",
-      name: "The Burger House",
-      description: "https://www.cravburgers.shop/favicon.ico",
-      image: "",
-      order_id: data.id,
-      handler: async function (response) {
-        const verifyRes = await fetch("/api/verifyOrder", {
-          method: "POST",
-          body: JSON.stringify(response),
-        });
-        const result = await verifyRes.json();
 
-        if (result.success) {
-          alert("Payment sucessful");
-        }
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-    const pay = new Razorpay(options);
-    pay.open();
+    const response = await me.json();
+
+    if (!response.sucess) {
+      setshowSignin(() => true);
+       return;
+    }
+
+    if (response.sucess) {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        body: JSON.stringify({ cartItems: reevaluatedCart }),
+      });
+
+      const data = await res.json();
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        amount: data.amount,
+        currency: "INR",
+        name: "The Burger House",
+        description: "https://www.cravburgers.shop/favicon.ico",
+        image: "",
+        order_id: data.id,
+        handler: async function (response) {
+          sessionStorage.setItem("orders", JSON.stringify(reevaluatedCart));
+          const verifyRes = await fetch("/api/verifyOrder", {
+            method: "POST",
+            body: JSON.stringify(response),
+          });
+
+          const result = await verifyRes.json();
+
+          if (result.success) {
+            alert("Payment sucessful");
+          }
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      const pay = new Razorpay(options);
+      pay.open();
+    }
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -187,6 +210,7 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
             </div>
             <button
               onClick={handleOrder}
+              disabled={reevaluatedCart.length === 0}
               className="w-full bg-red-500 hover:bg-black text-white font-bold text-sm tracking-wide py-3 rounded-full transition-colors cursor-pointer"
             >
               Checkout
@@ -194,6 +218,33 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
           </div>
         </div>
       </div>
+      {showSignin && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 p-6 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border-2 border-black bg-[#fff9f1] p-6 text-center shadow-[6px_6px_0_#000]">
+            <h3 className="font-modak text-4xl text-red-500 [-webkit-text-stroke:2px_white] [paint-order:stroke]">
+              Sign in first!
+            </h3>
+            <p className="mt-3 font-semibold text-black/70">
+              Please log in or create an account before checking out.
+            </p>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setshowSignin(false)}
+                className="flex-1 rounded-full border-2 border-black px-4 py-3 font-bold"
+              >
+                Not now
+              </button>
+              <Link
+                href="/login?utm=menu"
+                className="flex-1 rounded-full bg-red-500 px-4 py-3 font-bold text-white"
+              >
+                Log in
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import { NextResponse } from "next/server";
 import { menuItems } from "@/app/components/Menu";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 const razorpay = new Razorpay({
   key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
@@ -9,8 +10,21 @@ const razorpay = new Razorpay({
 
 export  async function POST(req) {
 
-  const { cartItems } = await req.json();
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json(
+      { sucess: false, msg: "Unauthorized" },
+      { status: 401 },
+    );
+  }
 
+  const { cartItems } = await req.json();
+    if(!cartItems) {
+      return NextResponse.json({
+        sucess: false,
+        msg: "items not provided",
+      });
+    }
    const amount = cartItems.reduce((sum, ci) => {
      const item = menuItems.find((m) => m.id === ci.id);
     

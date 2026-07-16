@@ -26,7 +26,7 @@ export const menuItems = [
       { label: "Patty", value: "Beef" },
       { label: "Spice", value: "Mild" },
     ],
-    calories: 920,
+    calories: 920, 
     protein: 38,
   },
   {

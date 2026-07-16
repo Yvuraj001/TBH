@@ -9,7 +9,7 @@ export default function MenuHeader() {
       <img
         src="/images/img-webp/lettuce.webp"
         alt=""
-        className="pointer-events-none absolute -right-12 xl:-right-16 top-2 w-36 rotate-12 select-none sm:-right-3 sm:w-48"
+        className="pointer-events-none absolute -right-12 xl:-right-16 top-2 w-36 rotate-12 select-none sm:-right-3 sm:w-48 xl:top-10"
       />
 
       <p className="relative z-10 font-memories text-sm tracking-[0.24em] text-red-500 uppercase sm:text-base">
