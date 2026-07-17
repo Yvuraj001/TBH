@@ -89,7 +89,7 @@ export default function OrdersPage() {
                         Order #TBH
                       </p>
                       <h3 className="mt-1 text-2xl font-black sm:text-3xl">
-                        Preparing your food
+                        Preparing your food (totol items)
                       </h3>
                     </div>
                   )}

@@ -1,13 +1,10 @@
 "use client";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import SplitText from "gsap/SplitText.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const FifthSection = () => {
   useGSAP(() => {
-    const texts = new SplitText(".textContainer", { type: "lines" });
-
     gsap.fromTo(
       ".text-1",
       { y: 400 },
@@ -45,7 +42,7 @@ const FifthSection = () => {
         y: 0,
         duration: 1.4,
         ease: "expo",
-        scrollTrigger: { trigger: ".text-3", start: "top 130%" },
+        scrollTrigger: { trigger: ".text-4", start: "top 130%" },
       },
     );
 

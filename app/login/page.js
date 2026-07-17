@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter, redirect } from "next/navigation";
 import { MessageToast, SucessToast } from "@/app/components/showToast";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
 
 const LoginPage = () => {
   const [isResult, setisResult] = useState(true);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const utm = searchParams.get("utm");
   const handleForm = async (form) => {
     form.preventDefault();
@@ -42,32 +42,28 @@ const LoginPage = () => {
         autoClose: 1300,
       });
 
-      if (utm) {
-        redirect(`/${utm}`);
-      }
-
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(redirect("/menu"));
-        }, 1000);
-      });
+      setTimeout(() => {
+        router.replace(utm ? `/${utm}` : "/menu");
+        router.refresh();
+      }, 600);
     }
   };
 
-  if (utm === "orders") {
-    toast(<MessageToast message={"Login to track orders"} />, {
-      closeButton: false,
-      className: "!bg-transparent !shadow-none !p-0",
-      autoClose: 1300,
-    });
-  }
-  if (utm === "menu") {
-    toast(<MessageToast message={"Login to checkout"} />, {
-      closeButton: false,
-      className: "!bg-transparent !shadow-none !p-0",
-      autoClose: 1300,
-    });
-  }
+  useEffect(() => {
+    if (utm === "orders") {
+      toast(<MessageToast message="Login to track orders" />, {
+        closeButton: false,
+        className: "!bg-transparent !shadow-none !p-0",
+        autoClose: 1300,
+      });
+    } else if (utm === "menu") {
+      toast(<MessageToast message="Login to checkout" />, {
+        closeButton: false,
+        className: "!bg-transparent !shadow-none !p-0",
+        autoClose: 1300,
+      });
+    }
+  }, [utm]);
   return (
     <main className="min-h-screen bg-[#ffc286] px-4 py-8 sm:px-6 sm:py-12">
       <section className="relative mx-auto flex min-h-[calc(100vh-8rem)] max-w-5xl items-center justify-center overflow-hidden rounded-[2.5rem] border-2 border-black bg-[#f7d9a8] px-5 py-12 shadow-[8px_8px_0_#000] sm:px-10">

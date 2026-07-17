@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
  
-export const middleware = async (req) => {
+export const proxy = async (req) => {
   const cookie = req.cookies.get("lttob")?.value;
   let isValid = false;
 

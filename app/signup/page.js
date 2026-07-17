@@ -1,5 +1,5 @@
 "use client";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { MessageToast, SucessToast } from "../components/showToast";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { useState } from "react";
 const SignupPage = () => {
   const [isResult, setisResult] = useState(true);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const utm = searchParams.get("utm");
   const handleSubmit = async (from) => {
     from.preventDefault();
@@ -39,15 +40,11 @@ const SignupPage = () => {
         className: "!bg-transparent !shadow-none !p-0",
         autoClose: 1300,
       });
-      if (utm) {
-        redirect(`/${utm}`)
-      }
-        new Promise((resolve, reject) => {
-          setTimeout(() => {
-            resolve(redirect("/menu"));
-          }, 1000);
-        });
-      
+
+      setTimeout(() => {
+        router.replace(utm ? `/${utm}` : "/menu");
+        router.refresh();
+      }, 600);
     }
   };
   return (
