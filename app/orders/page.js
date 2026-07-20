@@ -1,7 +1,9 @@
-"use client";
-import { useEffect, useState } from "react";
+import { getCurrentUser } from "@/lib/getCurrentUser";
+import connectDB from "@/lib/connectDb";
+import User from "@/schems/user.model";
+import Orders from "@/schems/orders.model";
 import Link from "next/link";
- 
+import CompletedOrdersModal from "@/app/components/CompletedOrdersModal";
 
 const BagIcon = () => (
   <svg
@@ -19,14 +21,44 @@ const BagIcon = () => (
   </svg>
 );
 
- 
-export default function OrdersPage() {
+export default async function OrdersPage() {
+  const userID = await getCurrentUser();
+  const userId = userID.userId ? userID.userId : null;
 
-  const [orders, setorders] = useState([]);
-  useEffect(() => {
-    const orders = JSON.parse(sessionStorage.getItem("orders"));
-    setorders(() => orders || []);
-  }, []);
+  await connectDB();
+  // getting user email
+  const user = await User.findOne({ _id: userId });
+  const email = user.email;
+
+  const pendingItem = await Orders.find({
+    user: email,
+    delivered: false,
+  }).sort({ orderPlaced: -1 });
+
+  const pendingOrders = pendingItem.flatMap((order) => order.order);
+  const isPreparing = pendingItem.some((order) => order.status === false);
+  const activeOrderPlacedAt = pendingItem[0]?.orderPlaced;
+
+  const completedItem = await Orders.find({
+    user: email,
+    status: true,
+    delivered: true,
+  }).sort({ orderPlaced: -1 });
+
+  const completedOrders = completedItem.map((order) => ({
+    id: order._id.toString(),
+    orderPlaced: order.orderPlaced.toISOString(),
+    order: order.order.map((item) => ({
+      name: item.name,
+      image: item.image,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+  }));
+
+  const subtotal = pendingOrders
+    .map((i) => i.price * i.quantity)
+    .reduce((acc, curr) => acc + curr, 0);
 
   return (
     <main className="min-h-screen bg-[#ffc286] px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
@@ -83,17 +115,32 @@ export default function OrdersPage() {
             <div className="grid gap-7 p-5 sm:p-7 lg:grid-cols-[1.1fr_0.9fr]">
               <div>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  {orders.length > 0 && (
+                  {pendingOrders.length > 0 && (
                     <div>
                       <p className="font-memories text-sm tracking-widest text-gray-500 uppercase">
                         Order #TBH
                       </p>
                       <h3 className="mt-1 text-2xl font-black sm:text-3xl">
-                        Preparing your food (totol items)
+                        {isPreparing ? "Preparing Your Food" : "Ready for Pickup"}
                       </h3>
+                      <div className="flex gap-4 items-center mt-2 ">
+                        <p className="font-memories text-md tracking-widest text-gray-500 uppercase">
+                          Items:
+                          <span className="font-bold text-red-500">
+                            {pendingOrders.length}{" "}
+                          </span>
+                        </p>
+                        ||
+                        <p className="font-memories text-md tracking-widest text-gray-500 uppercase">
+                          Total:
+                          <span className="font-bold text-red-500">
+                            {subtotal}
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   )}
-                  {orders.length === 0 && (
+                  {pendingOrders.length === 0 && (
                     <div>
                       <p className="font-memories text-sm tracking-widest text-gray-500 uppercase">
                         Order #TBH
@@ -103,17 +150,27 @@ export default function OrdersPage() {
                       </h3>
                     </div>
                   )}
-
-                  <span
-                    className={`rounded-full ${orders.length > 0 ? "bg-[#dff0d8] text-[#267348]" : "bg-[#f0d8d8] text-[#c81313]"} px-4 py-2 text-sm font-bold text-[#267348]`}
-                  >
-                    {orders.length > 0 ? "Preparing" : "Place order first"}
-                  </span>
+                  {pendingOrders.length === 0 && (
+                    <span
+                      className={`rounded-full ${pendingOrders.length > 0 ? "bg-[#dff0d8] text-[#267348]" : "bg-[#f0d8d8] text-[#c81313]"} px-4 py-2 text-sm font-bold text-[#267348]`}
+                    >
+                      Place a order first
+                    </span>
+                  )}
+                  {pendingOrders.length > 0 && (
+                    <span
+                      className={`rounded-full ${pendingOrders.length > 0 ? "bg-[#dff0d8] text-[#267348]" : "bg-[#f0d8d8] text-[#c81313]"} px-4 py-2 text-sm font-bold text-[#267348]`}
+                    >
+                      {isPreparing ? "Preparing" : "Ready for pickup"}
+                    </span>
+                  )}
                 </div>
 
-                <div className="mt-6 divide-y-2 divide-dashed divide-black/10 rounded-2xl bg-[#f5e3cd] p-4 sm:p-5 h-68 overflow-scroll">
-                  {orders.length > 0 ? (
-                    orders.map((order, index) => (
+                <div
+                  className={`mt-6 divide-y-2 divide-dashed divide-black/10 rounded-2xl bg-[#f5e3cd] p-4 sm:p-5 ${pendingOrders.length === 1 ? "h-fit" : "h-68"} overflow-scroll `}
+                >
+                  {pendingOrders.length > 0 ? (
+                    pendingOrders.map((order, index) => (
                       <div
                         key={index}
                         className="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
@@ -157,7 +214,7 @@ export default function OrdersPage() {
                   ) : (
                     <div className="flex h-full flex-col items-center justify-center gap-3 py-10 text-center">
                       <p className="text-gray-500 font-medium">
-                        You haven't ordered anything yet
+                        You have no pending orders
                       </p>
                       <Link
                         href="/menu"
@@ -169,12 +226,14 @@ export default function OrdersPage() {
                   )}
                 </div>
               </div>
-              {orders.length > 0 ? (
+              {pendingOrders.length > 0 ? (
                 <aside className="rounded-3xl bg-[#686868] p-6 text-white sm:p-7">
                   <p className="font-memories tracking-[0.22em] text-yellow-400 uppercase">
                     Order progress
                   </p>
-                  <h3 className="mt-2 text-2xl font-black">Almost ready!</h3>
+                  <h3 className="mt-2 text-2xl font-black">
+                    {isPreparing ? "Almost ready!" : "Ready to enjoy!"}
+                  </h3>
                   <div className="mt-8 space-y-0">
                     <div className="relative flex gap-4 pb-8 before:absolute before:top-7 before:left-3.25 before:h-12 before:w-0.5 before:bg-yellow-400">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-sm font-black text-black">
@@ -182,30 +241,42 @@ export default function OrdersPage() {
                       </span>
                       <div>
                         <p className="font-bold">Order received</p>
-                        <p className="mt-1 text-sm text-white/60">12:32 PM</p>
+                        <p className="mt-1 text-sm text-white/60">
+                          {activeOrderPlacedAt &&
+                            new Intl.DateTimeFormat("en-IN", {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            }).format(activeOrderPlacedAt)}
+                        </p>
                       </div>
                     </div>
                     <div className="relative flex gap-4 pb-8 before:absolute before:top-7 before:left-3.25 before:h-12 before:w-0.5 before:bg-white/20">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-500 text-sm font-black">
-                        2
+                      <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-black ${isPreparing ? "bg-red-500" : "bg-yellow-400 text-black"}`}>
+                        {isPreparing ? "2" : "✓"}
                       </span>
                       <div>
-                        <p className="font-bold">In the kitchen</p>
+                        <p className="font-bold">
+                          {isPreparing ? "In the kitchen" : "Order prepared"}
+                        </p>
                         <p className="mt-1 text-sm text-yellow-400">
-                          Your order is being prepared
+                          {isPreparing
+                            ? "Your order is being prepared"
+                            : "Your order is ready for pickup"}
                         </p>
                       </div>
                     </div>
                     <div className="flex gap-4">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-white/30 text-sm font-black text-white/50">
-                        3
+                      <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-black ${isPreparing ? "border-2 border-white/30 text-white/50" : "bg-yellow-400 text-black"}`}>
+                        {isPreparing ? "3" : "✓"}
                       </span>
                       <div>
-                        <p className="font-bold text-white/60">
+                        <p className={`font-bold ${isPreparing ? "text-white/60" : "text-white"}`}>
                           Ready to enjoy
                         </p>
-                        <p className="mt-1 text-sm text-white/40">
-                          Estimated in 8–10 min
+                        <p className={`mt-1 text-sm ${isPreparing ? "text-white/40" : "text-yellow-400"}`}>
+                          {isPreparing
+                            ? "Estimated in 8–10 min"
+                            : "Please collect your order"}
                         </p>
                       </div>
                     </div>
@@ -236,74 +307,65 @@ export default function OrdersPage() {
               </p>
               <h2 className="text-2xl font-black">Previous orders</h2>
             </div>
-            <p className="hidden text-sm font-bold text-gray-600 sm:block cursor-pointer">
-              View all
-            </p>
+            {completedOrders.length > 0 && <CompletedOrdersModal orders={completedOrders} />}
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <article className="rounded-4xl bg-white p-5 shadow-lg sm:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <span className="rounded-full bg-[#dff0d8] px-3 py-1.5 text-xs font-bold text-[#267348]">
-                  Delivered
-                </span>
-              </div>
+            {completedOrders.length > 0 ? (
+              completedOrders.slice(0, 2).map((completedOrder) => {
+                const items = completedOrder.order;
+                const firstItem = items[0];
+                const total = items.reduce(
+                  (sum, item) => sum + item.price * item.quantity,
+                  0,
+                );
 
-              <div className="mt-5 flex items-center gap-4 rounded-2xl bg-[#f5e3cd] p-3">
-                <div className="h-16 w-16 shrink-0 rounded-xl bg-white p-2">
-                  <img
-                    src="/images/demo.png"
-                    alt="BBQ Bacon Stack"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-memories text-xl leading-none text-red-500">
-                    BBQ Bacon Stack
-                  </h4>
-                  <p className="mt-2 text-sm text-gray-600">
-                    + Classic Vanilla Milkshake
-                  </p>
-                </div>
-                <p className="font-black">₹518</p>
-              </div>
-              <div className="mt-5 flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-500">
-                  June 28, 2026 ·
-                </p>
-              </div>
-            </article>
+                return (
+                  <article
+                    key={completedOrder.id}
+                    className="rounded-4xl bg-white p-5 shadow-lg sm:p-6"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="rounded-full bg-[#dff0d8] px-3 py-1.5 text-xs font-bold text-[#267348]">
+                        Delivered
+                      </span>
+                    </div>
 
-            <article className="rounded-4xl bg-white p-5 shadow-lg sm:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <span className="rounded-full bg-[#dff0d8] px-3 py-1.5 text-xs font-bold text-[#267348]">
-                  Delivered
-                </span>
-              </div>
-              <div className="mt-5 flex items-center gap-4 rounded-2xl bg-[#f5e3cd] p-3">
-                <div className="h-16 w-16 shrink-0 rounded-xl bg-white p-2">
-                  <img
-                    src="/images/burger.webp"
-                    alt="Double Cheese Deluxe"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-memories text-xl leading-none text-red-500">
-                    Double Cheese Deluxe
-                  </h4>
-                  <p className="mt-2 text-sm text-gray-600">
-                    + Crispy Onion Rings
-                  </p>
-                </div>
-                <p className="font-black">₹624</p>
-              </div>
-              <div className="mt-5 flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-500">
-                  June 14, 2026
-                </p>
-              </div>
-            </article>
+                    <div className="mt-5 flex items-center gap-4 rounded-2xl bg-[#f5e3cd] p-3">
+                      <div className="h-16 w-16 shrink-0 rounded-xl bg-white p-2">
+                        <img
+                          src={firstItem.image}
+                          alt={firstItem.name}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-memories text-xl leading-none text-red-500">
+                          {firstItem.name}
+                        </h4>
+                        {items.length > 1 && (
+                          <p className="mt-2 text-sm text-gray-600">
+                            + {items.length - 1} more item{items.length > 2 ? "s" : ""}
+                          </p>
+                        )}
+                      </div>
+                      <p className="font-black">₹{total}</p>
+                    </div>
+                    <div className="mt-5 flex items-center justify-between">
+                      <p className="text-sm font-semibold text-gray-500">
+                        {new Intl.DateTimeFormat("en-IN", {
+                          dateStyle: "medium",
+                        }).format(new Date(completedOrder.orderPlaced))}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <p className="rounded-3xl bg-white p-6 text-center font-medium text-gray-500 md:col-span-2">
+                Your delivered orders will appear here.
+              </p>
+            )}
           </div>
         </section>
 

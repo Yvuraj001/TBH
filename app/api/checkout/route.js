@@ -36,6 +36,7 @@ export  async function POST(req) {
   const order = await razorpay.orders.create({
     amount: amount * 100,
     currency: "INR",
+    notes: { cartItems: JSON.stringify(cartItems) },
   });
  
   return NextResponse.json(order);

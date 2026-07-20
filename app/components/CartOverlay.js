@@ -2,8 +2,10 @@ import { useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
 
+
 const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
   const [showSignin, setshowSignin] = useState(false);
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
 
   let reevaluatedCart = items.filter((item, index, array) => {
     return index === array.findIndex((i) => i.id === item.id);
@@ -15,7 +17,6 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
  
 
   const handleOrder = async () => {
-
     const me = await fetch("/api/auth/me", {
       method: "GET",
     });
@@ -45,16 +46,17 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
         image: "",
         order_id: data.id,
         handler: async function (response) {
-          sessionStorage.setItem("orders", JSON.stringify(reevaluatedCart));
           const verifyRes = await fetch("/api/verifyOrder", {
             method: "POST",
-            body: JSON.stringify(response),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response}),
           });
 
           const result = await verifyRes.json();
 
           if (result.success) {
-            alert("Payment sucessful");
+            reevaluatedCart.forEach((item) => handleDelete(item.id));
+            setShowPaymentSuccess(true);
           }
         },
         theme: {
@@ -241,6 +243,48 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
               >
                 Log in
               </Link>
+            </div>
+          </div>
+        </div>
+      )}
+      {showPaymentSuccess && (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 p-6 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="payment-success-title"
+            className="w-full max-w-sm rounded-3xl border-2 border-black bg-[#fff9f1] p-6 text-center shadow-[6px_6px_0_#000]"
+          >
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400 text-3xl font-black text-black">
+              ✓
+            </span>
+            <h3
+              id="payment-success-title"
+              className="mt-4 font-modak text-4xl text-red-500 [-webkit-text-stroke:2px_white] [paint-order:stroke]"
+            >
+              Order placed!
+            </h3>
+            <p className="mt-3 font-semibold text-black/70">
+              Your payment was successful. We&apos;ll start preparing your food soon.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <Link
+                href="/orders"
+                onClick={onClose}
+                className="rounded-full bg-red-500 px-4 py-3 font-bold text-white"
+              >
+                See my orders
+              </Link>
+              <button
+                onClick={() => {
+                  setShowPaymentSuccess(false);
+                  onClose();
+                }}
+                className="rounded-full border-2 border-black px-4 py-3 font-bold"
+              >
+                Continue ordering
+              </button>
             </div>
           </div>
         </div>
