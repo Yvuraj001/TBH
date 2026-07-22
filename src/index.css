@@ -67,3 +67,101 @@ html {
 @utility burger-btn {
   @apply bg-red-500 text-white px-3 text-sm sm:text-lg md:px-5 sm:py-2.5 py-1.5 rounded-3xl cursor-pointer    hover:bg-black transition-all ease-in duration-150 hover:transform hover:scale-[1.09];
 }
+
+
+
+.home-loading {
+  overflow: hidden;
+}
+
+.home-page-content {
+  opacity: 1;
+  transition: opacity 320ms ease;
+}
+
+.home-page-content.is-loading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  overflow: hidden;
+  background: #ffc286;
+  color: #ef4444;
+}
+
+.home-loader::before,
+.home-loader::after {
+  position: absolute;
+  width: min(52vw, 38rem);
+  height: min(52vw, 38rem);
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  content: "";
+}
+
+.home-loader::before {
+  transform: translate(-38%, -36%);
+}
+
+.home-loader::after {
+  transform: translate(42%, 44%);
+}
+
+.home-loader__brand {
+  z-index: 1;
+  margin: 0;
+  font-family: "Modak", sans-serif;
+  font-size: clamp(4rem, 13vw, 8rem);
+  line-height: 0.8;
+  color: #ef4444;
+  -webkit-text-stroke: 5px white;
+  paint-order: stroke;
+}
+
+.home-loader__burger {
+  z-index: 1;
+  display: grid;
+  width: 7.5rem;
+  gap: 0.35rem;
+}
+
+.home-loader__burger span {
+  display: block;
+  height: 0.8rem;
+  border: 3px solid #24130a;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 #24130a;
+  animation: loader-bounce 900ms ease-in-out infinite alternate;
+}
+
+.home-loader__burger span:nth-child(1) { background: #f7c66d; animation-delay: 0ms; }
+.home-loader__burger span:nth-child(2) { background: #ef4444; animation-delay: 110ms; }
+.home-loader__burger span:nth-child(3) { background: #75a84d; animation-delay: 220ms; }
+.home-loader__burger span:nth-child(4) { background: #5a2d1c; animation-delay: 330ms; }
+
+.home-loader__label {
+  z-index: 1;
+  margin: 0;
+  font-family: "Memories", sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.75rem);
+  letter-spacing: 0.08em;
+  color: #24130a;
+}
+
+@keyframes loader-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-0.45rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page-content { transition: none; }
+  .home-loader__burger span { animation: none; }
+}

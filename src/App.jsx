@@ -7,6 +7,7 @@ import ThirdSection from "./components/ThirdSection";
 import FourthSection from "./components/FourthSection";
 import FifthSection from "./components/FifthSection";
 import Footer from "./components/Footer";
+import HomeLoader from "./components/HomeLoader";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {SplitText} from "gsap/all";
 import {InertiaPlugin} from "gsap/all";
@@ -35,6 +36,7 @@ const App = () => {
 
   return (
     <DeviceBlock>
+      <HomeLoader/>
       <CursorTrail
         items={[
           { src: "/images/img-webp/lettuce.webp", alt: "lettuce" },
