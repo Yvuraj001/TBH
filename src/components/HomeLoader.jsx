@@ -53,14 +53,22 @@ const HomeLoader = ({ children }) => {
 
       {isLoading && (
         <div className="home-loader" role="status" aria-live="polite" aria-label="Loading The Burger House">
-          <p className="home-loader__brand">TBH</p>
-          <div className="home-loader__burger" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
+          <span className="home-loader__orb home-loader__orb--one" aria-hidden="true" />
+          <span className="home-loader__orb home-loader__orb--two" aria-hidden="true" />
+          <div className="home-loader__content">
+            <p className="home-loader__brand">TBH</p>
+            <div className="home-loader__burger" aria-hidden="true">
+              <span className="home-loader__bun-top" />
+              <span className="home-loader__lettuce" />
+              <span className="home-loader__cheese" />
+              <span className="home-loader__patty" />
+              <span className="home-loader__bun-bottom" />
+            </div>
+            <p className="home-loader__label">Building your burger</p>
+            <div className="home-loader__progress" aria-hidden="true">
+              <span />
+            </div>
           </div>
-          <p className="home-loader__label">Firing up the grill</p>
         </div>
       )}
     </>
