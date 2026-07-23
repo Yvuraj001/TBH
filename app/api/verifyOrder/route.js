@@ -19,7 +19,7 @@ export async function POST(req) {
     const userId = await getCurrentUser();
     if (!userId) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized" },
+        { success: false, msg: "Unauthorized" },
         { status: 401 },
       );
     }
@@ -29,7 +29,7 @@ export async function POST(req) {
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return NextResponse.json(
-        { success: false, message: "Missing payment details" },
+        { success: false, msg: "Missing payment details" },
         { status: 400 },
       );
     }
@@ -47,14 +47,14 @@ export async function POST(req) {
     const receivedBuffer = Buffer.from(razorpay_signature);
 
     if (expectedBuffer.length !== receivedBuffer.length) {
-      return NextResponse.json({ success: false }, { status: 400 });
+      return NextResponse.json({ success: false, msg: "Buffer timeout" }, { status: 400 });
     }
 
     const valid = crypto.timingSafeEqual(expectedBuffer, receivedBuffer);
 
     if (!valid) {
       return NextResponse.json(
-        { success: false, message: "Invalid signature" },
+        { success: false, msg: "Invalid payment signature" },
         { status: 400 },
       );
     }
@@ -62,7 +62,7 @@ export async function POST(req) {
     const user = await User.findOne({ _id: userId.userId });
     if (!user) {
       return NextResponse.json(
-        { success: false, message: "User not found" },
+        { success: false, msg: "User not found" },
         { status: 404 },
       );
     }
@@ -70,10 +70,18 @@ export async function POST(req) {
     const fetchPayments = await razorpay.payments.fetch(razorpay_payment_id);
     const razorpayOrder = await razorpay.orders.fetch(razorpay_order_id);
     const originalCart = JSON.parse(razorpayOrder.notes.cartItems);
+    const orderType = razorpayOrder.notes.orderType;
+
+    if (!["dine-in", "takeaway"].includes(orderType)) {
+      return NextResponse.json(
+        { success: false, msg: "Order type is missing or invalid" },
+        { status: 400 },
+      );
+    }
 
     if (fetchPayments.order_id !== razorpay_order_id) {
       return NextResponse.json(
-        { success: false, message: "Payment does not match this order" },
+        { success: false, msg: "Payment does not match this order" },
         { status: 400 },
       );
     }
@@ -85,18 +93,36 @@ export async function POST(req) {
 
     if (recomputed * 100 !== fetchPayments.amount) {
       return NextResponse.json(
-        { success: false, message: "Amount mismatch" },
+        { success: false, msg: "Amount mismatch" },
         { status: 400 },
       );
     }
 
     if (fetchPayments.status === "captured") {
+      const pendingOrders = await Orders.find({
+        user: user.email,
+        delivered: false,
+      }).sort({ orderPlaced: -1 });
+      const existingCode = pendingOrders.find(
+        (pendingOrder) => pendingOrder.orderVerificationCode,
+      )?.orderVerificationCode;
+      const orderVerificationCode = existingCode || crypto.randomInt(100000, 1000000).toString();
+
+      if (pendingOrders.length) {
+        await Orders.updateMany(
+          { user: user.email, delivered: false },
+          { $set: { orderVerificationCode } },
+        );
+      }
+
       const order = await new Orders({
         user: user.email,
         order: originalCart,
+        orderType,
         status: false,
         delivered: false,
         inStock: true,
+        orderVerificationCode,
         razorpayPaymentId: razorpay_payment_id,
         razorpayOrderId: razorpay_order_id,
         currency: fetchPayments.currency,
@@ -109,11 +135,11 @@ export async function POST(req) {
           return NextResponse.json({ success: true });
       } catch (error) {
         if (error.code === 11000) {
-          return NextResponse.json({ success: true, msg: "Already processed" });
+          return NextResponse.json({ success: true, msg: "Order already processed" });
         }
         console.log("error while processing order in db", error.message)
        return NextResponse.json(
-         { success: false, msg: "Server error" },
+         { success: false, msg: "Error while processing order" },
          { status: 500 },
        );
       }
@@ -125,7 +151,7 @@ export async function POST(req) {
   } catch (error) {
     console.log("erorr in verify route: ",  error.message)
      return NextResponse.json(
-       { success: false, msg: "Server error" },
+       { success: false, msg: "Error while verfiying order" },
        { status: 500 },
      );
   }

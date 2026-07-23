@@ -1,11 +1,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
+import { toast } from "react-toastify";
+import { MessageToast } from "./showToast";
 
 
 const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
   const [showSignin, setshowSignin] = useState(false);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [orderType, setOrderType] = useState("takeaway");
 
   let reevaluatedCart = items.filter((item, index, array) => {
     return index === array.findIndex((i) => i.id === item.id);
@@ -32,7 +35,8 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
     if (response.sucess) {
       const res = await fetch("/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ cartItems: reevaluatedCart }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartItems: reevaluatedCart, orderType }),
       });
 
       const data = await res.json();
@@ -46,6 +50,7 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
         image: "",
         order_id: data.id,
         handler: async function (response) {
+
           const verifyRes = await fetch("/api/verifyOrder", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -57,6 +62,13 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
           if (result.success) {
             reevaluatedCart.forEach((item) => handleDelete(item.id));
             setShowPaymentSuccess(true);
+          }
+          if (!result.success) {
+            toast(<MessageToast message={result.msg} />, {
+              closeButton: false,
+              className: "!bg-transparent !shadow-none !p-0",
+              autoClose: 3000,
+            });
           }
         },
         theme: {
@@ -200,6 +212,28 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
             </div>
           )}
 
+          <div className="mt-6 rounded-2xl bg-[#f5e3cd]/60 p-4">
+            <div className="px-1 text-sm font-black text-black">
+              How would you like your order?
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {[
+                ["dine-in", "Eat here"],
+                ["takeaway", "Take home"],
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setOrderType(value)}
+                  aria-pressed={orderType === value}
+                  className={`rounded-xl border-2 px-3 py-3 text-sm font-black transition ${orderType === value ? "border-red-500 bg-red-500 text-white" : "border-transparent bg-white text-black hover:border-red-300"}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-6 pt-4 border-t-2 border-dashed border-black/10">
             <div className="flex items-center justify-between mb-4">
               <span className="font-bold text-gray-600 text-sm tracking-widest uppercase">
@@ -210,6 +244,9 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
                 {subtotal || 0}
               </span>
             </div>
+            <p className="m-3 font-semibold text-red-500 text-sm text-center opacity-[0.8]">
+             ‼️ Cancellation not available
+            </p>
             <button
               onClick={handleOrder}
               disabled={reevaluatedCart.length === 0}
@@ -265,7 +302,8 @@ const CartPopup = ({ items, onClose, updateQuantity, handleDelete }) => {
               Order placed!
             </h3>
             <p className="mt-3 font-semibold text-black/70">
-              Your payment was successful. We&apos;ll start preparing your food soon.
+              Your payment was successful. We&apos;ll start preparing your food
+              soon.
             </p>
 
             <div className="mt-6 flex flex-col gap-3">

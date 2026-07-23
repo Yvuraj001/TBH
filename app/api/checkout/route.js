@@ -18,12 +18,19 @@ export  async function POST(req) {
     );
   }
 
-  const { cartItems } = await req.json();
-    if(!cartItems) {
-      return NextResponse.json({
-        sucess: false,
-        msg: "items not provided",
-      });
+  const { cartItems, orderType } = await req.json();
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+      return NextResponse.json(
+        { sucess: false, msg: "items not provided" },
+        { status: 400 },
+      );
+    }
+
+    if (!['dine-in', 'takeaway'].includes(orderType)) {
+      return NextResponse.json(
+        { sucess: false, msg: "Select whether you are eating here or taking home" },
+        { status: 400 },
+      );
     }
    const amount = cartItems.reduce((sum, ci) => {
      const item = menuItems.find((m) => m.id === ci.id);
@@ -36,7 +43,7 @@ export  async function POST(req) {
   const order = await razorpay.orders.create({
     amount: amount * 100,
     currency: "INR",
-    notes: { cartItems: JSON.stringify(cartItems) },
+    notes: { cartItems: JSON.stringify(cartItems), orderType },
   });
  
   return NextResponse.json(order);

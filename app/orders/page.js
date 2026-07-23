@@ -38,6 +38,9 @@ export default async function OrdersPage() {
   const pendingOrders = pendingItem.flatMap((order) => order.order);
   const isPreparing = pendingItem.some((order) => order.status === false);
   const activeOrderPlacedAt = pendingItem[0]?.orderPlaced;
+  const orderVerificationCode = pendingItem.find(
+    (order) => order.orderVerificationCode,
+  )?.orderVerificationCode;
 
   const completedItem = await Orders.find({
     user: email,
@@ -234,6 +237,19 @@ export default async function OrdersPage() {
                   <h3 className="mt-2 text-2xl font-black">
                     {isPreparing ? "Almost ready!" : "Ready to enjoy!"}
                   </h3>
+                  {orderVerificationCode && (
+                    <div className="mt-5 rounded-2xl bg-white/10 p-4">
+                      <p className="text-xs font-bold tracking-widest text-yellow-400 uppercase">
+                        Order verification code
+                      </p>
+                      <p className="mt-1 font-mono text-3xl font-black tracking-[0.28em] text-white">
+                        {orderVerificationCode}
+                      </p>
+                      <p className="mt-1 text-xs text-white/60">
+                        Share this code with staff to verify your order.
+                      </p>
+                    </div>
+                  )}
                   <div className="mt-8 space-y-0">
                     <div className="relative flex gap-4 pb-8 before:absolute before:top-7 before:left-3.25 before:h-12 before:w-0.5 before:bg-yellow-400">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-sm font-black text-black">

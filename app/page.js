@@ -13,12 +13,14 @@ import { SplitText } from "gsap/all";
 import { InertiaPlugin } from "gsap/all";
 
 import gsap from "gsap";
+import HomeLoader from "./components/HomeLoader";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const App = () => {
   return (
     <>
     <LenisConfig/>
+    <HomeLoader/>
       <CursorTrail
         items={[
           { src: "/images/img-webp/lettuce.webp", alt: "lettuce" },

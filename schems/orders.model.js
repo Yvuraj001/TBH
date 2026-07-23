@@ -8,6 +8,11 @@ const orderSchems = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  orderType: {
+    type: String,
+    enum: ["dine-in", "takeaway"],
+    required: true,
+  },
 
   orderPlaced: {
     type: Date,
@@ -26,6 +31,10 @@ const orderSchems = new mongoose.Schema({
   delivered: {
     type: Boolean,
     default: false,
+  },
+  orderVerificationCode: {
+    type: String,
+    match: /^\d{6}$/,
   },
   razorpayOrderId: {
     type: String,
