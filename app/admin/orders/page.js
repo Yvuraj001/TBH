@@ -90,7 +90,7 @@ export default async function AllOrdersPage() {
           ))}
         </section>
 
-        <section className="mt-8 overflow-hidden rounded-[2rem] border-2 border-[#28130f] bg-white shadow-[0.5rem_0.5rem_0_#28130f]">
+        <section className="mt-8 overflow-hidden rounded-4xl border-2 border-[#28130f] bg-white shadow-[0.5rem_0.5rem_0_#28130f]">
           <div className="grid grid-cols-[1fr_auto] gap-4 border-b-2 border-[#28130f] bg-[#28130f] px-5 py-3 text-xs font-bold tracking-[0.16em] text-white uppercase sm:grid-cols-[1fr_1fr_auto] sm:px-7">
             <span>Customer & order</span>
             <span className="hidden sm:block">Items</span>
