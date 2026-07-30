@@ -5,6 +5,7 @@ import CartPopup from "../components/CartOverlay";
 import FilterBar from "../components/Filters";
 import { useState } from "react";
 import MenuHeader from "../components/menuHeader";
+import MenuPreloader from "../components/MenuPreloader";
  
 
 const MenuPage = () => {
@@ -79,6 +80,7 @@ const MenuPage = () => {
 
   return (
     <main className="min-h-screen bg-[#ffc286]">
+      <MenuPreloader />
       <div className="cartOverlay">
         {cartVisiblity ? (
           <CartPopup

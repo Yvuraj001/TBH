@@ -1,9 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { menuItems } from "./Menu";
 import LoaderScreen from "./LoaderScreen";
 
-const HomeLoader = ({ children }) => {
+const loadImage = (src) =>
+  new Promise((resolve) => {
+    const image = new Image();
+    image.onload = resolve;
+    image.onerror = resolve;
+    image.src = src.trim();
+
+    if (image.complete) resolve();
+  });
+
+const MenuPreloader = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,7 +28,6 @@ const HomeLoader = ({ children }) => {
     const finishLoading = () => {
       if (hasFinishedLoading) return;
       hasFinishedLoading = true;
-      window.clearTimeout(fallbackTimer);
 
       const remainingTime = Math.max(
         0,
@@ -26,24 +36,19 @@ const HomeLoader = ({ children }) => {
 
       window.setTimeout(() => {
         if (!isMounted) return;
-
         setIsLoading(false);
         document.documentElement.classList.remove("page-loading");
       }, remainingTime);
     };
 
-    const pageReady = window.document.fonts?.ready ?? Promise.resolve();
-    const resourcesReady =
-      document.readyState === "complete"
-        ? Promise.resolve()
-        : new Promise((resolve) =>
-            window.addEventListener("load", resolve, { once: true }),
-          );
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
+    const imagesReady = Promise.all(menuItems.map((item) => loadImage(item.image)));
+    const fallbackTimer = window.setTimeout(finishLoading, 8000);
 
-    // Never leave visitors on the loading screen if a third-party request stalls.
-    const fallbackTimer = window.setTimeout(finishLoading, 10000);
-
-    Promise.all([pageReady, resourcesReady]).then(finishLoading);
+    Promise.all([fontsReady, imagesReady]).then(() => {
+      window.clearTimeout(fallbackTimer);
+      finishLoading();
+    });
 
     return () => {
       isMounted = false;
@@ -52,7 +57,7 @@ const HomeLoader = ({ children }) => {
     };
   }, []);
 
-  return isLoading ? <LoaderScreen label="Building your burger" /> : (children ?? null);
+  return isLoading ? <LoaderScreen label="Setting the menu table" /> : null;
 };
 
-export default HomeLoader;
+export default MenuPreloader;
