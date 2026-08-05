@@ -94,6 +94,13 @@ const Navbar = ({ userId }) => {
 
       <ul className="flex-center sm:gap-7 gap-3 text-white">
         <li>
+          <Link href="/contact">
+            <button className="menu-btn">
+              <span className="text-sm">CONTACT</span>
+            </button>
+          </Link>
+        </li>
+        <li>
           <Link href="/menu">
             <button className="menu-btn">
               <span className="text-sm">MENU</span>
@@ -117,7 +124,7 @@ const Navbar = ({ userId }) => {
             {open && (
               <div className="absolute right-0 z-20 mt-3 w-48 rounded-2xl border-2 border-yellow-600 bg-[#fff9f1]/95 backdrop-blur-md p-2 shadow-[4px_4px_0_#000] animate-in fade-in slide-in-from-top-1 duration-150 ">
                 <Link
-                  href=""
+                  href="/contact"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-black/80 transition hover:bg-red-500 hover:text-white"
                 >

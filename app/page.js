@@ -14,11 +14,13 @@ import { InertiaPlugin } from "gsap/all";
 
 import gsap from "gsap";
 import HomeLoader from "./components/HomeLoader";
+import PurchasePopup from "./components/PurchasePopup";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const App = () => {
   return (
     <>
+    <PurchasePopup />
     <LenisConfig/>
     <HomeLoader/>
       <CursorTrail

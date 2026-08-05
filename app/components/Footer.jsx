@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import SplitText from "gsap/SplitText.js";
 import ScrollTrigger from "gsap/all";
 import { use, useRef } from "react";
+import Link from "next/link";
 const Footer = () => {
   const footerRef = useRef(null);
 
@@ -38,9 +39,9 @@ const Footer = () => {
       <div className="upper flex justify-between items-center p-4 text-2xl font-memories">
         <div className="Upper-left">
           <ul className="flex items-center gap-7">
-            <li>Home</li>
-            <li>Burgers</li>
-            <li>Contact</li>
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/menu">Burgers</Link></li>
+            <li><Link href="/contact">Contact</Link></li>
           </ul>
         </div>
         <div className="Upper-right">
