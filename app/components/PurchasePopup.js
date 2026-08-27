@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const CONTACT_EMAIL = "work.with.mohit69@gmail.com";
-const WHATSAPP_NUMBER = "918930398031";
+const WHATSAPP_NUMBER = "98031XXXX";
 
 export default function PurchasePopup() {
   const [isOpen, setIsOpen] = useState(false);

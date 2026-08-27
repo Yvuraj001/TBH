@@ -20,7 +20,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText, InertiaPlugin);
 const App = () => {
   return (
     <>
-    <PurchasePopup />
+    {/* removed purchase popup for some reason! */}
+    {/* <PurchasePopup /> */}
     <LenisConfig/>
     <HomeLoader/>
       <CursorTrail

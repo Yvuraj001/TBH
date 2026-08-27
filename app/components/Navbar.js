@@ -93,13 +93,7 @@ const Navbar = ({ userId }) => {
       </Link>
 
       <ul className="flex-center sm:gap-7 gap-3 text-white">
-        <li>
-          <Link href="/contact">
-            <button className="menu-btn">
-              <span className="text-sm">CONTACT</span>
-            </button>
-          </Link>
-        </li>
+        
         <li>
           <Link href="/menu">
             <button className="menu-btn">
@@ -155,6 +149,13 @@ const Navbar = ({ userId }) => {
             </Link>
           </li>
         )}
+        <li>
+          <Link href="/contact">
+            <button className="menu-btn">
+              <span className="text-sm">CONTACT</span>
+            </button>
+          </Link>
+        </li>
       </ul>
     </nav>
   );
