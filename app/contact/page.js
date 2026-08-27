@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const email = "work.with.mohit69@gmail.com";
-const whatsappNumber = "918930398031";
+
 
 export const metadata = {
   title: "Contact | TBH",
