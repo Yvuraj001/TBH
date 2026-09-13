@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Suspense } from "react";
 import Navbar from "./components/Navbar";
 import DeviceBlock from "./components/DeviceBlock";
 import { ToastContainer } from "react-toastify";
@@ -11,11 +12,15 @@ export const metadata = {
   description: "The burger house, the best burger in town",
 };
 
+async function KitchenStatusBanner() {
+  const kitchenIsOpen = await getKitchenStatus();
+
+  return <KitchenBanner isOpen={kitchenIsOpen} />;
+}
+
 export default async function RootLayout({ children }) {
-  const [user, kitchenIsOpen] = await Promise.all([
-    getCurrentUser(),
-    getKitchenStatus(),
-  ]);
+  const user = await getCurrentUser();
+
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
@@ -34,7 +39,9 @@ export default async function RootLayout({ children }) {
             transition={Slide}
           />
           <Navbar userId={user} />
-          <KitchenBanner isOpen={kitchenIsOpen} />
+          <Suspense fallback={null}>
+            <KitchenStatusBanner />
+          </Suspense>
           {children}
         </DeviceBlock>
       </body>
