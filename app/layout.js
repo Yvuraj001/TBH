@@ -12,9 +12,10 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  let user = await getCurrentUser()
-
-  const kitchenIsOpen = await getKitchenStatus();
+  const [user, kitchenIsOpen] = await Promise.all([
+    getCurrentUser(),
+    getKitchenStatus(),
+  ]);
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
